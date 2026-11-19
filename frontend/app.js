@@ -483,9 +483,27 @@ function handleAccountAction() {
   });
 }
 
+async function withButtonLoading(buttonOrId, loadingText, action) {
+  const btn = typeof buttonOrId === 'string' ? document.getElementById(buttonOrId) : buttonOrId;
+  const originalHtml = btn ? btn.innerHTML : null;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>${loadingText}`;
+  }
+  try {
+    return await action();
+  } finally {
+    if (btn && originalHtml !== null) {
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+    }
+  }
+}
+
 submitCustomerBooking = function () {
   if (!appState.authenticated) { openLoginModal(); showToast('Vui lòng đăng nhập để đặt lịch', 'info'); return; }
-  perform(async () => {
+  const btn = document.getElementById('btnSubmitBooking') || document.querySelector('button[onclick*="submitCustomerBooking"]');
+  withButtonLoading(btn, 'Đang đặt lịch...', () => perform(async () => {
     const body = {
       customerName: document.getElementById('bookCustomerName').value.trim(),
       phone: document.getElementById('bookCustomerPhone').value.trim(),
@@ -497,17 +515,18 @@ submitCustomerBooking = function () {
     const created = await api('/api/appointments', {method:'POST', body});
     document.getElementById('bookSymptomNote').value = '';
     await refreshState(); switchCustomerTab('TRACKING'); showToast(`Đã đặt lịch #${created.id}`, 'success');
-  });
+  }));
 };
 
 confirmRescheduleBooking = function () {
-  perform(async () => {
+  const btn = document.getElementById('btnConfirmReschedule') || document.querySelector('button[onclick*="confirmRescheduleBooking"]');
+  withButtonLoading(btn, 'Đang lưu...', () => perform(async () => {
     const id = document.getElementById('rescheduleApptId').value;
     const date = document.getElementById('rescheduleDateInput').value;
     const serviceIds = Array.from(document.querySelectorAll('input[name="rescheduleSrv"]:checked')).map(item => item.value);
     await api(`/api/appointments/${encodeURIComponent(id)}/schedule`, {method:'PUT', body:{date, slot:rescheduleSelectedSlot, serviceIds}});
     closeModal('modalReschedule'); await refreshState(); showToast('Đã đổi lịch và gửi xác nhận lại', 'success');
-  });
+  }));
 };
 
 confirmCancelOrReject = function () {
@@ -521,13 +540,14 @@ confirmCancelOrReject = function () {
 };
 
 submitStaffConfirm = function () {
-  perform(async () => {
+  const btn = document.getElementById('btnSubmitStaffConfirm') || document.querySelector('button[onclick*="submitStaffConfirm"]');
+  withButtonLoading(btn, 'Đang duyệt...', () => perform(async () => {
     const id = document.getElementById('staffConfirmApptId').value;
     const body = {status:'CONFIRMED', bay:document.getElementById('staffConfirmBay').value,
       technician:document.getElementById('staffConfirmTech').value, reason:document.getElementById('staffConfirmNote').value.trim()};
     await api(`/api/appointments/${encodeURIComponent(id)}/status`, {method:'PUT', body});
     closeModal('modalStaffConfirm'); await refreshState(); showToast('Đã duyệt lịch hẹn', 'success');
-  });
+  }));
 };
 updateAppointmentStatus = function (id, status) {
   perform(async () => {
@@ -542,7 +562,8 @@ openWalkInModal = function () {
   document.getElementById('walkinTech').innerHTML = document.getElementById('staffConfirmTech').innerHTML;
 };
 submitWalkInBooking = function () {
-  perform(async () => {
+  const btn = document.getElementById('btnSubmitWalkIn') || document.querySelector('button[onclick*="submitWalkInBooking"]');
+  withButtonLoading(btn, 'Đang tạo...', () => perform(async () => {
     const body = {customerName:document.getElementById('walkinName').value.trim(), phone:document.getElementById('walkinPhone').value.trim(),
       licensePlate:document.getElementById('walkinPlate').value.trim().toUpperCase(), carModel:document.getElementById('walkinModel').value.trim(),
       date:document.getElementById('walkinDate').value, slot:document.getElementById('walkinSlot').value,
@@ -550,7 +571,7 @@ submitWalkInBooking = function () {
       walkIn:true, note:'Tiếp nhận trực tiếp', bay:document.getElementById('walkinBay').value, technician:document.getElementById('walkinTech').value};
     const created = await api('/api/appointments', {method:'POST', body});
     closeModal('modalWalkIn'); await refreshState(); showToast(`Đã tạo lịch #${created.id}`, 'success');
-  });
+  }));
 };
 
 toggleServiceActive = function (id) {
@@ -566,7 +587,8 @@ openServiceEditorModal = function (id = null) {
   originalServiceEditor(id); document.getElementById('editSrvCode').readOnly = !!id;
 };
 saveServiceFromModal = function () {
-  perform(async () => {
+  const btn = document.getElementById('btnSaveService') || document.querySelector('button[onclick*="saveServiceFromModal"]');
+  withButtonLoading(btn, 'Đang lưu...', () => perform(async () => {
     const id = document.getElementById('editSrvId').value;
     const existing = appState.services.find(s => s.id === id);
     const checklist = document.getElementById('editSrvChecklist').value.split(';').map(s => s.trim()).filter(Boolean);
@@ -576,7 +598,7 @@ saveServiceFromModal = function () {
       checklist, description:checklist.join(' • '), warranty:existing?.warranty || '', active:existing?.active ?? true};
     await api(id ? `/api/services/${encodeURIComponent(id)}` : '/api/services', {method:id ? 'PUT' : 'POST', body});
     closeModal('modalServiceEditor'); await refreshState(); showToast('Đã lưu dịch vụ', 'success');
-  });
+  }));
 };
 adjustMaxCapacity = function (delta) {
   perform(async () => {
@@ -620,7 +642,8 @@ saveNewAccount = function () {
   }
 
   phoneInput.value = phone;
-  perform(async () => {
+  const btn = document.getElementById('btnSaveAccount') || document.querySelector('button[onclick*="saveNewAccount()"]');
+  withButtonLoading(btn, 'Đang tạo...', () => perform(async () => {
     const body = {name, phone, role, meta, password};
     await api('/api/accounts', {method:'POST', body});
     passwordInput.value = '';
@@ -628,7 +651,7 @@ saveNewAccount = function () {
     closeModal('modalAddUser');
     await refreshState();
     showToast('Đã tạo tài khoản', 'success');
-  });
+  }));
 };
 
 document.addEventListener('keydown', event => {

@@ -152,28 +152,51 @@
       transform: translateY(-50%) scale(0.9);
     }
 
-    /* Modern button animation & states */
-    .btn-signal-animated {
-      position: relative;
-      background: linear-gradient(135deg, #FF5722 0%, #F4511E 100%);
-      color: #FFFFFF;
-      font-weight: 600;
-      border: none;
-      overflow: hidden;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.25);
+    /* =========================================================================
+       UNIVERSAL BUTTON ANIMATIONS & MODERN INTERACTION STYLES
+       ========================================================================= */
+
+    /* Universal base interaction for all interactive buttons */
+    button, a[role="button"], input[type="button"], input[type="submit"] {
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
+    button:not(:disabled), a.button:not(.disabled) {
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 1. Primary Action Buttons (bg-signal, .btn-signal-animated, a.bg-signal) */
+    button.bg-signal,
+    a.bg-signal,
+    .btn-signal-animated {
+      position: relative;
+      background: linear-gradient(135deg, #FF5722 0%, #F4511E 100%) !important;
+      color: #FFFFFF !important;
+      font-weight: 600;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      box-shadow: 0 4px 14px rgba(255, 87, 34, 0.28);
+    }
+
+    button.bg-signal:hover:not(:disabled),
+    a.bg-signal:hover,
     .btn-signal-animated:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(255, 87, 34, 0.45);
     }
 
+    button.bg-signal:active:not(:disabled),
+    a.bg-signal:active,
     .btn-signal-animated:active:not(:disabled) {
-      transform: scale(0.98);
+      transform: translateY(1px) scale(0.98);
       box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
     }
 
+    /* Shimmer light sweep beam */
+    button.bg-signal::after,
+    a.bg-signal::after,
     .btn-signal-animated::after {
       content: '';
       position: absolute;
@@ -184,7 +207,7 @@
       background: linear-gradient(
         to right,
         rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.35) 50%,
         rgba(255, 255, 255, 0) 100%
       );
       transform: rotate(30deg);
@@ -193,17 +216,73 @@
       opacity: 0;
     }
 
+    button.bg-signal:hover:not(:disabled)::after,
+    a.bg-signal:hover::after,
     .btn-signal-animated:hover:not(:disabled)::after {
       opacity: 1;
       left: 130%;
       transition: left 0.75s ease-in-out;
     }
 
+    button.bg-signal:disabled,
     .btn-signal-animated:disabled {
-      opacity: 0.7;
+      opacity: 0.65;
       cursor: not-allowed;
       transform: none !important;
       box-shadow: none !important;
+    }
+
+    /* 2. Secondary & Elevated Buttons (card-elevated, .btn-secondary-animated) */
+    button.card-elevated:not(.password-toggle-btn):not(:disabled),
+    .btn-secondary-animated:not(:disabled) {
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    button.card-elevated:not(.password-toggle-btn):hover:not(:disabled),
+    .btn-secondary-animated:hover:not(:disabled) {
+      transform: translateY(-2px);
+      border-color: rgba(255, 87, 34, 0.6) !important;
+      color: var(--text-main) !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    button.card-elevated:not(.password-toggle-btn):active:not(:disabled),
+    .btn-secondary-animated:active:not(:disabled) {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 3. Danger Action Buttons (bg-rose-600, bg-red-600, bg-rose-500) */
+    button[class*="bg-rose-"],
+    button[class*="bg-red-"] {
+      background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    button[class*="bg-rose-"]:hover:not(:disabled),
+    button[class*="bg-red-"]:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(225, 29, 72, 0.42);
+    }
+
+    button[class*="bg-rose-"]:active:not(:disabled),
+    button[class*="bg-red-"]:active:not(:disabled) {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 2px 6px rgba(225, 29, 72, 0.25);
+    }
+
+    /* 4. Slot Buttons & Interactive Chips */
+    #bookingTimeSlotGrid button:not(:disabled):hover,
+    #rescheduleSlotGrid button:not(:disabled):hover {
+      transform: translateY(-1.5px);
+      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.2);
+    }
+
+    #bookingTimeSlotGrid button:not(:disabled):active,
+    #rescheduleSlotGrid button:not(:disabled):active {
+      transform: scale(0.98);
     }
 
     @keyframes eyePop {
@@ -440,7 +519,7 @@
             </div>
 
             <!-- Primary CTA -->
-            <button type="button" onclick="submitCustomerBooking()" class="w-full py-3 px-4 rounded-lg bg-signal hover:bg-signal-hover text-white font-display font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+            <button type="button" id="btnSubmitBooking" onclick="submitCustomerBooking()" class="w-full py-3 px-4 rounded-lg bg-signal hover:bg-signal-hover text-white font-display font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
               <i class="fa-solid fa-calendar-check"></i>
               <span>Xác nhận Đặt lịch</span>
             </button>
@@ -796,7 +875,7 @@
 
       <div class="flex justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
         <button onclick="closeModal('modalReschedule')" class="px-3.5 py-1.5 rounded-lg card-elevated text-xs font-semibold">Hủy</button>
-        <button onclick="confirmRescheduleBooking()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold hover:bg-signal-hover transition">
+        <button id="btnConfirmReschedule" onclick="confirmRescheduleBooking()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold hover:bg-signal-hover transition">
           Lưu thay đổi
         </button>
       </div>
@@ -874,7 +953,7 @@
 
       <div class="flex justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
         <button onclick="closeModal('modalStaffConfirm')" class="px-3.5 py-1.5 rounded-lg card-elevated text-xs font-semibold">Đóng</button>
-        <button onclick="submitStaffConfirm()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition">
+        <button id="btnSubmitStaffConfirm" onclick="submitStaffConfirm()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition">
           Xác nhận duyệt lịch
         </button>
       </div>
@@ -935,7 +1014,7 @@
       </div>
       <div class="flex justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
         <button onclick="closeModal('modalWalkIn')" class="px-3.5 py-1.5 rounded-lg card-elevated text-xs font-semibold">Hủy</button>
-        <button onclick="submitWalkInBooking()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold hover:bg-signal-hover transition">
+        <button id="btnSubmitWalkIn" onclick="submitWalkInBooking()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold hover:bg-signal-hover transition">
           Tạo & Duyệt lịch
         </button>
       </div>
@@ -988,7 +1067,7 @@
 
       <div class="flex justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
         <button onclick="closeModal('modalServiceEditor')" class="px-3.5 py-1.5 rounded-lg card-elevated text-xs font-semibold">Hủy</button>
-        <button onclick="saveServiceFromModal()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold hover:bg-signal-hover transition">
+        <button id="btnSaveService" onclick="saveServiceFromModal()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold hover:bg-signal-hover transition">
           Lưu dịch vụ
         </button>
       </div>
@@ -1085,7 +1164,7 @@
       </div>
       <div class="flex justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
         <button onclick="closeModal('modalAddUser')" class="px-3.5 py-1.5 rounded-lg card-elevated text-xs font-semibold">Hủy</button>
-        <button onclick="saveNewAccount()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold">Tạo tài khoản</button>
+        <button id="btnSaveAccount" onclick="saveNewAccount()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold">Tạo tài khoản</button>
       </div>
     </div>
   </div>
@@ -2293,6 +2372,6 @@
 
     window.addEventListener('DOMContentLoaded', () => { initTheme(); initializeApp(); });
   </script>
-  <script src="/app.js?v=2.0.0"></script>
+  <script src="/app.js?v=2.1.0"></script>
 </body>
 </html>
