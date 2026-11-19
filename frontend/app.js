@@ -102,9 +102,19 @@ async function api(path, {method = 'GET', body, form = false, retry = true} = {}
         return await api(path, {method, body, form, retry: false});
       } catch (_) { /* Fall through to error handler */ }
     }
-    let message = response.status === 401 ? 'Số điện thoại hoặc mật khẩu không đúng, hoặc phiên đăng nhập đã hết hạn'
+    let message = response.status === 401 ? 'Số điện thoại hoặc mật khẩu không chính xác'
       : response.status === 403 ? 'Bạn không có quyền thực hiện thao tác này' : 'Không thể thực hiện yêu cầu';
-    try { message = (await response.json()).message || message; } catch (_) { /* Security responses may have no JSON body. */ }
+    try {
+      const json = await response.json();
+      if (json && json.message && json.message !== 'No message available') {
+        message = json.message;
+      } else if (response.status === 401) {
+        message = 'Số điện thoại hoặc mật khẩu không chính xác';
+      }
+    } catch (_) { /* Security responses may have no JSON body. */ }
+    if (message === 'No message available') {
+      message = 'Số điện thoại hoặc mật khẩu không chính xác';
+    }
     throw new Error(message);
   }
   if (response.status === 204 || response.headers.get('content-length') === '0') return null;
@@ -121,7 +131,13 @@ async function perform(action) {
   if (mutationInProgress) return;
   mutationInProgress = true;
   try { await action(); }
-  catch (error) { showToast(error.message || 'Không thể kết nối đến máy chủ', 'error'); }
+  catch (error) {
+    let msg = error.message || 'Không thể kết nối đến máy chủ';
+    if (msg.includes('No message available')) {
+      msg = 'Số điện thoại hoặc mật khẩu không chính xác';
+    }
+    showToast(msg, 'error');
+  }
   finally { mutationInProgress = false; }
 }
 
@@ -284,8 +300,10 @@ function togglePasswordVisibility(inputId, iconId) {
   const input = document.getElementById(inputId);
   const icon = document.getElementById(iconId);
   if (!input) return;
-  const isPassword = input.type === 'password';
-  input.type = isPassword ? 'text' : 'password';
+  const isPassword = input.type === 'password' || input.getAttribute('type') === 'password';
+  const nextType = isPassword ? 'text' : 'password';
+  input.type = nextType;
+  input.setAttribute('type', nextType);
   if (icon) {
     if (isPassword) {
       icon.classList.remove('fa-eye');
@@ -305,7 +323,10 @@ window.togglePasswordVisibility = togglePasswordVisibility;
 function resetPasswordVisibility(inputId, iconId) {
   const input = document.getElementById(inputId);
   const icon = document.getElementById(iconId);
-  if (input) input.type = 'password';
+  if (input) {
+    input.type = 'password';
+    input.setAttribute('type', 'password');
+  }
   if (icon) {
     icon.classList.remove('fa-eye-slash', 'eye-animating');
     icon.classList.add('fa-eye');
@@ -353,22 +374,47 @@ async function login(phone, password) {
   showToast('Đăng nhập thành công', 'success');
 }
 handlePhoneLogin = function () {
-  const phoneRaw = document.getElementById('loginPhoneInput').value;
-  const password = document.getElementById('loginPasswordInput').value;
-  const phone = normalizePhoneNumber(phoneRaw);
+  const phoneInput = document.getElementById('loginPhoneInput');
+  const passwordInput = document.getElementById('loginPasswordInput');
+  const phoneRaw = phoneInput.value.trim();
+  const password = passwordInput.value;
 
+  if (phoneRaw.includes('@') || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(phoneRaw)) {
+    showToast('Hệ thống hiện tại đăng nhập bằng Số điện thoại (ví dụ: 0901234567, 0912345678, 0988888888)', 'error');
+    phoneInput.focus();
+    return;
+  }
+
+  const phone = normalizePhoneNumber(phoneRaw);
   if (!phone || !/^0\d{9,10}$/.test(phone)) {
     showToast('Số điện thoại không đúng định dạng (bắt đầu bằng 0, gồm 10-11 chữ số)', 'error');
-    document.getElementById('loginPhoneInput').focus();
+    phoneInput.focus();
     return;
   }
   if (!password || password.length < 8) {
     showToast('Mật khẩu phải có ít nhất 8 ký tự', 'error');
-    document.getElementById('loginPasswordInput').focus();
+    passwordInput.focus();
     return;
   }
-  document.getElementById('loginPhoneInput').value = phone;
-  perform(() => login(phone, password));
+  phoneInput.value = phone;
+
+  const submitBtn = document.getElementById('loginSubmitBtn');
+  const originalContent = submitBtn ? submitBtn.innerHTML : 'Đăng nhập';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Đang đăng nhập...';
+  }
+
+  perform(async () => {
+    try {
+      await login(phone, password);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalContent;
+      }
+    }
+  });
 };
 function registerCustomer() {
   const nameInput = document.getElementById('registerName');
@@ -376,9 +422,16 @@ function registerCustomer() {
   const passwordInput = document.getElementById('registerPassword');
 
   const name = nameInput.value.trim();
-  const phone = normalizePhoneNumber(phoneInput.value);
+  const phoneRaw = phoneInput.value.trim();
   const password = passwordInput.value;
 
+  if (phoneRaw.includes('@')) {
+    showToast('Hệ thống hiện tại đăng ký bằng Số điện thoại (ví dụ: 0901234567)', 'error');
+    phoneInput.focus();
+    return;
+  }
+
+  const phone = normalizePhoneNumber(phoneRaw);
   if (!name) {
     showToast('Vui lòng nhập họ và tên', 'error');
     nameInput.focus();
@@ -396,9 +449,24 @@ function registerCustomer() {
   }
 
   phoneInput.value = phone;
+
+  const submitBtn = document.getElementById('registerSubmitBtn');
+  const originalContent = submitBtn ? submitBtn.innerHTML : 'Đăng ký';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Đang xử lý...';
+  }
+
   perform(async () => {
-    await api('/api/register', {method:'POST', body:{name, phone, password, meta:''}});
-    await login(phone, password);
+    try {
+      await api('/api/register', {method:'POST', body:{name, phone, password, meta:''}});
+      await login(phone, password);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalContent;
+      }
+    }
   });
 }
 function handleAccountAction() {

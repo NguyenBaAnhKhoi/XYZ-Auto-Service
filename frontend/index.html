@@ -139,7 +139,7 @@
       cursor: pointer;
       padding: 0;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 10;
+      z-index: 30;
     }
 
     .password-toggle-btn:hover {
@@ -150,6 +150,60 @@
 
     .password-toggle-btn:active {
       transform: translateY(-50%) scale(0.9);
+    }
+
+    /* Modern button animation & states */
+    .btn-signal-animated {
+      position: relative;
+      background: linear-gradient(135deg, #FF5722 0%, #F4511E 100%);
+      color: #FFFFFF;
+      font-weight: 600;
+      border: none;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.25);
+    }
+
+    .btn-signal-animated:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 87, 34, 0.45);
+    }
+
+    .btn-signal-animated:active:not(:disabled) {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
+    }
+
+    .btn-signal-animated::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(30deg);
+      transition: none;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .btn-signal-animated:hover:not(:disabled)::after {
+      opacity: 1;
+      left: 130%;
+      transition: left 0.75s ease-in-out;
+    }
+
+    .btn-signal-animated:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
     }
 
     @keyframes eyePop {
@@ -957,12 +1011,12 @@
           <label for="loginPasswordInput" class="block text-[var(--text-muted)] mb-1">Mật khẩu</label>
           <div class="password-wrapper">
             <input type="password" id="loginPasswordInput" autocomplete="current-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
-            <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
+            <button type="button" onmousedown="event.preventDefault()" onclick="togglePasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
               <i id="loginPasswordToggleIcon" class="fa-solid fa-eye"></i>
             </button>
           </div>
         </div>
-        <button type="button" onclick="handlePhoneLogin()" class="w-full py-2.5 rounded-lg bg-signal text-white font-semibold">Đăng nhập</button>
+        <button type="button" id="loginSubmitBtn" onclick="handlePhoneLogin()" class="w-full py-2.5 rounded-lg btn-signal-animated font-semibold">Đăng nhập</button>
         <button type="button" onclick="toggleRegistration(true)" class="w-full py-2 card-elevated rounded-lg">Tạo tài khoản khách hàng</button>
       </div>
       <div id="registrationFields" class="hidden space-y-3 text-xs">
@@ -978,12 +1032,12 @@
           <label for="registerPassword" class="block text-[var(--text-muted)] mb-1">Mật khẩu (ít nhất 8 ký tự)</label>
           <div class="password-wrapper">
             <input type="password" id="registerPassword" autocomplete="new-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
-            <button type="button" onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
+            <button type="button" onmousedown="event.preventDefault()" onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
               <i id="registerPasswordToggleIcon" class="fa-solid fa-eye"></i>
             </button>
           </div>
         </div>
-        <button type="button" onclick="registerCustomer()" class="w-full py-2.5 rounded-lg bg-signal text-white font-semibold">Đăng ký</button>
+        <button type="button" id="registerSubmitBtn" onclick="registerCustomer()" class="w-full py-2.5 rounded-lg btn-signal-animated font-semibold">Đăng ký</button>
         <button type="button" onclick="toggleRegistration(false)" class="w-full py-2 card-elevated rounded-lg">Quay lại đăng nhập</button>
       </div>
     </div>
@@ -1024,7 +1078,7 @@
         <label for="newUserPassword" class="block text-[var(--text-muted)] mb-1 text-xs">Mật khẩu ban đầu (ít nhất 8 ký tự) *</label>
         <div class="password-wrapper">
           <input type="password" id="newUserPassword" autocomplete="new-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
-          <button type="button" onclick="togglePasswordVisibility('newUserPassword', 'newUserPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
+          <button type="button" onmousedown="event.preventDefault()" onclick="togglePasswordVisibility('newUserPassword', 'newUserPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
             <i id="newUserPasswordToggleIcon" class="fa-solid fa-eye"></i>
           </button>
         </div>
@@ -1043,6 +1097,30 @@
   <!-- APPLICATION LOGIC -->
   <!-- ===================================================================== -->
   <script>
+    // Inline password visibility toggle (synchronous, resilient to caching & load order)
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!input) return;
+      const isPassword = input.type === 'password' || input.getAttribute('type') === 'password';
+      const nextType = isPassword ? 'text' : 'password';
+      input.type = nextType;
+      input.setAttribute('type', nextType);
+      if (icon) {
+        if (isPassword) {
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
+        icon.classList.remove('eye-animating');
+        void icon.offsetWidth;
+        icon.classList.add('eye-animating');
+      }
+    }
+    window.togglePasswordVisibility = togglePasswordVisibility;
+
     // 8 standard slots from 08:00 to 16:00
     const TIME_SLOTS = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
 
@@ -2215,6 +2293,6 @@
 
     window.addEventListener('DOMContentLoaded', () => { initTheme(); initializeApp(); });
   </script>
-  <script src="/app.js"></script>
+  <script src="/app.js?v=2.0.0"></script>
 </body>
 </html>

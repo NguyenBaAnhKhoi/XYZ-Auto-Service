@@ -81,7 +81,11 @@ public class SecurityConfig {
             .formLogin(form -> form.loginProcessingUrl("/api/login")
                 .usernameParameter("phone").passwordParameter("password")
                 .successHandler((req, res, auth) -> res.setStatus(HttpStatus.NO_CONTENT.value()))
-                .failureHandler((req, res, ex) -> res.sendError(HttpStatus.UNAUTHORIZED.value())))
+                .failureHandler((req, res, ex) -> {
+                    res.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    res.setContentType("application/json;charset=UTF-8");
+                    res.getWriter().write("{\"message\":\"Số điện thoại hoặc mật khẩu không chính xác\"}");
+                }))
             .logout(logout -> logout.logoutUrl("/api/logout")
                 .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpStatus.NO_CONTENT.value())));
         return http.build();

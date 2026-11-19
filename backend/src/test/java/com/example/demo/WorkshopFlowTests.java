@@ -131,4 +131,13 @@ class WorkshopFlowTests {
         try { start.await(); return session.json("POST", "/api/appointments", body); }
         catch (Exception e) { throw new RuntimeException(e); }
     }
+
+    @Test
+    void testFailedLoginReturnsFriendlyMessage() throws Exception {
+        var session = new Session();
+        session.token();
+        var res = session.send("POST", "/api/login", "phone=0999999999&password=wrongpassword", "application/x-www-form-urlencoded", true);
+        assertEquals(401, res.statusCode());
+        assertTrue(res.body().contains("Số điện thoại hoặc mật khẩu không chính xác"));
+    }
 }
