@@ -115,6 +115,65 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #FF5722;
     }
+
+    /* Password input visibility toggle */
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-toggle-btn {
+      position: absolute;
+      top: 50%;
+      right: 0.75rem;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 0.375rem;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+    }
+
+    .password-toggle-btn:hover {
+      color: #FF5722;
+      background-color: rgba(255, 87, 34, 0.1);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .password-toggle-btn:active {
+      transform: translateY(-50%) scale(0.9);
+    }
+
+    @keyframes eyePop {
+      0% {
+        transform: scale(0.6) rotate(-15deg);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scale(1.25) rotate(10deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .eye-animating {
+      animation: eyePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    input[type="password"]::-ms-reveal,
+    input[type="password"]::-ms-clear {
+      display: none;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-signal selection:text-white">
@@ -883,9 +942,9 @@
       <div id="loginFields" class="space-y-3 text-xs">
         <label class="block">Số điện thoại<input type="tel" id="loginPhoneInput" autocomplete="username" class="w-full mt-1 px-3 py-2 rounded-lg input-field font-mono" /></label>
         <label class="block">Mật khẩu
-          <div class="relative mt-1">
+          <div class="password-wrapper mt-1">
             <input type="password" id="loginPasswordInput" autocomplete="current-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
-            <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon')" class="absolute inset-y-0 right-0 px-3 flex items-center text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus:outline-none" aria-label="Hiện/ẩn mật khẩu">
+            <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
               <i id="loginPasswordToggleIcon" class="fa-solid fa-eye"></i>
             </button>
           </div>
@@ -897,9 +956,9 @@
         <label class="block">Họ và tên<input id="registerName" autocomplete="name" class="w-full mt-1 px-3 py-2 rounded-lg input-field" /></label>
         <label class="block">Số điện thoại<input type="tel" id="registerPhone" autocomplete="tel" class="w-full mt-1 px-3 py-2 rounded-lg input-field" /></label>
         <label class="block">Mật khẩu (ít nhất 8 ký tự)
-          <div class="relative mt-1">
+          <div class="password-wrapper mt-1">
             <input type="password" id="registerPassword" autocomplete="new-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
-            <button type="button" onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggleIcon')" class="absolute inset-y-0 right-0 px-3 flex items-center text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus:outline-none" aria-label="Hiện/ẩn mật khẩu">
+            <button type="button" onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
               <i id="registerPasswordToggleIcon" class="fa-solid fa-eye"></i>
             </button>
           </div>
@@ -942,9 +1001,9 @@
         </div>
       </div>
       <label class="block text-xs">Mật khẩu ban đầu (ít nhất 8 ký tự)
-        <div class="relative mt-1">
+        <div class="password-wrapper mt-1">
           <input type="password" id="newUserPassword" autocomplete="new-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
-          <button type="button" onclick="togglePasswordVisibility('newUserPassword', 'newUserPasswordToggleIcon')" class="absolute inset-y-0 right-0 px-3 flex items-center text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus:outline-none" aria-label="Hiện/ẩn mật khẩu">
+          <button type="button" onclick="togglePasswordVisibility('newUserPassword', 'newUserPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
             <i id="newUserPasswordToggleIcon" class="fa-solid fa-eye"></i>
           </button>
         </div>

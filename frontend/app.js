@@ -237,6 +237,10 @@ function togglePasswordVisibility(inputId, iconId) {
       icon.classList.remove('fa-eye-slash');
       icon.classList.add('fa-eye');
     }
+    // Trigger smooth eye pop animation via void reflow
+    icon.classList.remove('eye-animating');
+    void icon.offsetWidth;
+    icon.classList.add('eye-animating');
   }
 }
 window.togglePasswordVisibility = togglePasswordVisibility;
@@ -246,7 +250,7 @@ function resetPasswordVisibility(inputId, iconId) {
   const icon = document.getElementById(iconId);
   if (input) input.type = 'password';
   if (icon) {
-    icon.classList.remove('fa-eye-slash');
+    icon.classList.remove('fa-eye-slash', 'eye-animating');
     icon.classList.add('fa-eye');
   }
 }
