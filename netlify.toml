@@ -10,9 +10,9 @@
 # Status 200 performs an internal rewrite (proxying response directly without client URL change or CORS issues).
 [[redirects]]
   from = "/api/*"
-  to = "http://localhost:8080/api/:splat"
+  to = "https://xyz-auto-service.onrender.com/api/:splat"
   status = 200
-  force = false
+  force = true
 
 # SPA Fallback: rewrite all non-file client routes to index.html
 [[redirects]]
