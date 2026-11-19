@@ -1,0 +1,15 @@
+{
+  "name": "xyz-auto-service",
+  "version": "1.0.0",
+  "description": "XYZ Auto Service - Garage Management Web Application",
+  "scripts": {
+    "build": "node ./build-redirects.js",
+    "neon:deploy": "neon deploy",
+    "neon:pull": "neon env pull"
+  },
+  "dependencies": {
+    "@neon/config": "^1.14.4",
+    "@neon/env": "^2.1.7",
+    "pg": "^8.23.1"
+  }
+}
