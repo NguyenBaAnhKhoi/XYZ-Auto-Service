@@ -58,19 +58,23 @@ public class CloudDatabaseEnvironmentPostProcessor implements EnvironmentPostPro
                 if (userInfo != null && !userInfo.isEmpty()) {
                     String[] parts = userInfo.split(":", 2);
                     if (parts.length > 0 && !parts[0].isEmpty()) {
-                        props.put("spring.datasource.username", parts[0]);
+                        String user = java.net.URLDecoder.decode(parts[0], java.nio.charset.StandardCharsets.UTF_8);
+                        props.put("spring.datasource.username", user);
                     }
                     if (parts.length > 1) {
-                        props.put("spring.datasource.password", parts[1]);
+                        String pass = java.net.URLDecoder.decode(parts[1], java.nio.charset.StandardCharsets.UTF_8);
+                        props.put("spring.datasource.password", pass);
                     }
                 }
             } catch (Exception e) {
-                // Fallback: prefix jdbc: if standard URI parsing fails
-                String fallback = databaseUrl.startsWith("jdbc:") ? databaseUrl : "jdbc:" + databaseUrl;
+                // Fallback: prefix jdbc: and ensure postgresql scheme if standard URI parsing fails
+                String normalized = databaseUrl.replaceFirst("^postgres://", "postgresql://");
+                String fallback = normalized.startsWith("jdbc:") ? normalized : "jdbc:" + normalized;
                 props.put("spring.datasource.url", fallback);
             }
         } else if (!databaseUrl.startsWith("jdbc:")) {
-            props.put("spring.datasource.url", "jdbc:" + databaseUrl);
+            String normalized = databaseUrl.replaceFirst("^postgres://", "postgresql://");
+            props.put("spring.datasource.url", normalized.startsWith("jdbc:") ? normalized : "jdbc:" + normalized);
         } else {
             props.put("spring.datasource.url", databaseUrl);
         }
