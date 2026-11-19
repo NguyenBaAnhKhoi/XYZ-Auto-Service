@@ -24,9 +24,13 @@ public class SecurityConfig {
     @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
     @Bean UserDetailsService userDetailsService(AccountRepository accounts) {
-        return phone -> accounts.findByPhone(phone)
-                .map(a -> User.withUsername(a.phone).password(a.passwordHash).roles(a.role.name()).build())
-                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản"));
+        return phone -> {
+            String cleanPhone = WorkshopService.normalizePhone(phone);
+            return accounts.findByPhone(cleanPhone)
+                    .or(() -> accounts.findByPhone(phone))
+                    .map(a -> User.withUsername(a.phone).password(a.passwordHash).roles(a.role.name()).build())
+                    .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản"));
+        };
     }
 
     @Bean

@@ -4,13 +4,16 @@
 
 [![Java Version](https://img.shields.io/badge/Java-21%20LTS-007396?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/projects/jdk/21/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B%20%7C%2018-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Architecture](https://img.shields.io/badge/Architecture-Modular%20Frontend%20%26%20Backend-indigo?style=for-the-badge)](docs/architecture.md)
-[![Tests](https://img.shields.io/badge/Tests-100%25%20Passed%20(3%2F3)-success?style=for-the-badge&logo=junit5&logoColor=white)](docs/test-report.md)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B%20%7C%2018%20%7C%20Neon-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Netlify](https://img.shields.io/badge/Frontend-Netlify%20Edge%20CDN-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://www.netlify.com/)
+[![Render](https://img.shields.io/badge/Backend-Render%20Cloud%20Docker-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com/)
+[![Tests](https://img.shields.io/badge/Tests-100%25%20Passed%20(9%2F9)-success?style=for-the-badge&logo=junit5&logoColor=white)](docs/test-report.md)
 [![Build Tool](https://img.shields.io/badge/Maven-3.9%2B-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)](https://maven.apache.org/)
 
 **Hệ thống Quản lý Đặt lịch Dịch vụ Ô tô Trực tuyến, Điều phối Công suất Khoang Kỹ thuật và Theo dõi Tiến độ Sửa chữa Thời gian thực.**  
 *Đồ án học phần môn học: **Quản lý Dự án Phần mềm (Mã lớp học phần: 71ITSE41503)***
+
+[🚀 Hướng dẫn Triển khai Internet Toàn diện (Netlify + Render + Neon)](docs/DEPLOYMENT_GUIDE.md) • [🗄️ Hướng dẫn CSDL Cloud PostgreSQL](docs/database-cloud-guide.md)
 
 </div>
 
@@ -20,15 +23,16 @@
 1. [Tổng quan dự án & Bối cảnh nghiệp vụ](#1-tổng-quan-dự-án--bối-cảnh-nghiệp-vụ)
 2. [Các chức năng cốt lõi (Phạm vi F01 – F09)](#2-các-chức-năng-cốt-lõi-phạm-vi-f01--f09)
 3. [Điểm sáng kỹ thuật & Quyết định kiến trúc (ADRs)](#3-điểm-sáng-kỹ-thuật--quyết-định-kiến-trúc-adrs)
-4. [Kiến trúc phân tách Frontend / Backend & Cơ chế đóng gói](#4-kiến-trúc-phân-tách-frontend--backend--cơ-chế-đóng-gói)
-5. [Hướng dẫn khởi chạy nhanh (1-Click Run)](#5-hướng-dẫn-khởi-chạy-nhanh-1-click-run)
-6. [Hướng dẫn triển khai với PostgreSQL thật](#6-hướng-dẫn-triển-khai-với-postgresql-thật)
-7. [Danh bạ tài khoản mẫu dùng thử hệ thống](#7-danh-bạ-tài-khoản-mẫu-dùng-thử-hệ-thống)
-8. [Kịch bản 6 bước trình diễn luồng nghiệp vụ chuẩn](#8-kịch-bản-6-bước-trình-diễn-luồng-nghiệp-vụ-chuẩn)
-9. [Minh chứng kiểm thử tích hợp tự động](#9-minh-chứng-kiểm-thử-tích-hợp-tự-động)
-10. [Cấu trúc mã nguồn chuẩn hóa](#10-cấu-trúc-mã-nguồn-chuẩn-hóa)
-11. [Hệ thống tài liệu dự án (@docs)](#11-hệ-thống-tài-liệu-dự-án-docs)
-12. [Đội ngũ phát triển & Đóng góp thành viên (Contributors)](#12-đội-ngũ-phát-triển--đóng-góp-thành-viên-contributors)
+4. [Kiến trúc triển khai Internet 3 tầng (3-Tier Cloud Architecture)](#4-kiến-trúc-triển-khai-internet-3-tầng-3-tier-cloud-architecture)
+5. [Tính năng mới & Trải nghiệm người dùng (UX Enhancements)](#5-tính-năng-mới--trải-nghiệm-người-dùng-ux-enhancements)
+6. [Danh bạ tài khoản mẫu dùng thử hệ thống](#6-danh-bạ-tài-khoản-mẫu-dùng-thử-hệ-thống)
+7. [Hướng dẫn triển khai Internet nhanh (Netlify + Render + Neon)](#7-hướng-dẫn-triển-khai-internet-nhanh-netlify--render--neon)
+8. [Hướng dẫn khởi chạy cục bộ (1-Click Run & Local Docker)](#8-hướng-dẫn-khởi-chạy-cục-bộ-1-click-run--local-docker)
+9. [Kịch bản 6 bước trình diễn luồng nghiệp vụ chuẩn](#9-kịch-bản-6-bước-trình-diễn-luồng-nghiệp-vụ-chuẩn)
+10. [Minh chứng kiểm thử tích hợp tự động (Pass 100%)](#10-minh-chứng-kiểm-thử-tích-hợp-tự-động-pass-100)
+11. [Cấu trúc mã nguồn chuẩn hóa](#11-cấu-trúc-mã-nguồn-chuẩn-hóa)
+12. [Hệ thống tài liệu dự án (@docs)](#12-hệ-thống-tài-liệu-dự-án-docs)
+13. [Đội ngũ phát triển & Đóng góp thành viên (Contributors)](#13-đội-ngũ-phát-triển--đóng-góp-thành-viên-contributors)
 
 ---
 
@@ -42,7 +46,7 @@ Trung tâm dịch vụ ô tô XYZ trước đây vận hành tiếp nhận xe b�
 * Ban giám đốc thiếu dữ liệu định lượng về công suất khai thác trạm và doanh thu ước tính.
 
 ### 1.2. Mục tiêu giải pháp (Solution Vision)
-WorkshopOS được xây dựng nhằm khép kín toàn bộ chu trình dịch vụ từ lúc khách hàng tra cứu, đặt lịch trực tuyến, nhân viên tiếp nhận phân khoang, đến khi bàn giao xe hoàn tất với tiêu chí: **Trực quan - Chống nghẽn - Bảo mật - Chạy 1-click không phụ thuộc cấu hình phức tạp**.
+WorkshopOS được xây dựng nhằm khép kín toàn bộ chu trình dịch vụ từ lúc khách hàng tra cứu, đặt lịch trực tuyến, nhân viên tiếp nhận phân khoang, đến khi bàn giao xe hoàn tất với tiêu chí: **Trực quan - Chống nghẽn - Bảo mật - Sẵn sàng triển khai Internet với chi phí 0 đồng**.
 
 ---
 
@@ -58,7 +62,7 @@ WorkshopOS được xây dựng nhằm khép kín toàn bộ chu trình dịch v
 | **F06** | **Theo dõi trạng thái** | Customer | Khách theo dõi vòng đời: `PENDING` ➔ `CONFIRMED` ➔ `IN_PROGRESS` ➔ `COMPLETED`. |
 | **F07** | **Quản lý năng lực xưởng** | System/Manager | Kiểm soát giới hạn 3 xe/slot (chỉnh được 1–5); Khóa bi quan chống tranh chấp; Chặn trùng biển số. |
 | **F08** | **Báo cáo thống kê** | Manager | Dashboard quản trị đo lường: Tổng số lịch, tỷ lệ tiếp nhận/hủy, lượt đặt và doanh thu dự kiến theo từng dịch vụ. |
-| **F09** | **Quản lý tài khoản** | All Roles | Đăng nhập/Đăng ký qua SĐT, băm mật khẩu BCrypt, Session Cookie bảo mật, phân quyền nghiêm ngặt 3 vai trò. |
+| **F09** | **Quản lý tài khoản** | All Roles | Đăng nhập/Đăng ký qua SĐT, băm mật khẩu BCrypt, Session Cookie bảo mật, chuẩn hóa SĐT thông minh (+84, dấu cách), phân quyền nghiêm ngặt 3 vai trò. |
 
 ---
 
@@ -73,37 +77,148 @@ WorkshopOS được xây dựng nhằm khép kín toàn bộ chu trình dịch v
 3. **Bảo Toàn Giá Lịch Sử (Price Snapshotting)**:
    * Giá và thời lượng dịch vụ được lưu bản chụp cứng (`@Embeddable ServiceSnapshot`) vào bảng `workshop_appointment_services`.
    * Việc Quản lý thay đổi giá dịch vụ sau này không bao giờ làm sai lệch số tiền của các lịch hẹn đã chốt trong quá khứ.
-4. **Cơ Chế Đa Profile (Dual Profile Resilience)**:
-   * **Profile `dev` (Default)**: CSDL In-Memory tương thích chuẩn ngữ pháp PostgreSQL (`MODE=PostgreSQL`). Bấm Run là chạy ngay trong 2 giây, không cần cài đặt CSDL ngoại vi.
-   * **Profile `postgres`**: Kết nối trực tiếp vào PostgreSQL thật (Cổng `5432` Docker hoặc CSDL doanh nghiệp).
-5. **Cấu Trúc Tách Biệt Frontend / Backend Với Quy Trình Build Tự Động**:
-   * Phân tách mã nguồn giao diện sang thư mục độc lập `frontend/` (HTML5, Tailwind CSS, JS State Machine, FontAwesome) giúp đội UI làm việc tập trung.
-   * `backend/pom.xml` tích hợp `maven-resources-plugin` tự động đồng bộ tài nguyên tĩnh vào classpath khi build, giúp ứng dụng duy trì mô hình phân phối Single-Origin mà không phát sinh phức tạp về CORS hay quản lý 2 máy chủ riêng biệt.
+4. **Tương Thích Môi Trường Kép (Cloud PostgreSQL & Local H2 Dual Engine)**:
+   * **Profile `postgres`**: Kết nối tự động tới các nhà cung cấp Cloud PostgreSQL (Neon, Supabase, Render, Railway, AWS RDS) với SSL enforced (`?sslmode=require`), connection pool tối ưu qua HikariCP. Bộ phân giải `CloudDatabaseEnvironmentPostProcessor` tự động chuyển đổi định dạng `DATABASE_URL` dạng `postgres://` sang chuẩn Spring Boot JDBC.
+   * **Profile `dev` (Default)**: CSDL In-Memory H2 giả lập PostgreSQL (`MODE=PostgreSQL`), nạp dữ liệu mẫu tức thì, không cần cài đặt phần mềm bên ngoài.
+5. **Cơ Chế Đóng Gói Lưỡng Dụng (Dual Deployment Model)**:
+   * Hỗ trợ triển khai đám mây phân tán: Frontend trên Netlify Edge CDN + Backend Docker trên Render/Railway + Database Neon Serverless.
+   * Đồng thời hỗ trợ đóng gói tất cả vào 1 file JAR duy nhất (`maven-resources-plugin`) để chạy local 1-click hoặc chạy trên máy chủ nội bộ.
 
 ---
 
-## 4. KIẾN TRÚC PHÂN TÁCH FRONTEND / BACKEND & CƠ CHẾ ĐÓNG GÓI
+## 4. KIẾN TRÚC TRIỂN KHAI INTERNET 3 TẦNG (3-TIER CLOUD ARCHITECTURE)
 
-Dự án tổ chức mã nguồn thành 2 thư mục rõ ràng:
-- `frontend/`: Toàn bộ mã nguồn giao diện tĩnh của khách hàng và nhân viên.
-- `backend/`: Ứng dụng Spring Boot, JPA, Security và REST API.
+Hệ thống được thiết kế sẵn sàng cho môi trường Internet theo kiến trúc hiện đại, phân tán và bảo mật:
 
 ```mermaid
-flowchart LR
-    FE["frontend/\n(index.html, app.js,\nworkshop.css, vendor/)"] -- "maven-resources-plugin\n(process-resources)" --> TARGET["backend/target/classes/static/"]
-    BE["backend/src/\n(Java Controller, Service,\nSecurity, Domain)"] --> JAR["Executable JAR\n(Single Origin :8080)"]
-    TARGET --> JAR
-    JAR --> BROWSER["Trình duyệt Client\nhttp://localhost:8080"]
+flowchart TD
+    subgraph Client["Trình Duyệt Khách Hàng / Nhân Viên"]
+        Browser["Người dùng (Desktop / Mobile Web Browser)"]
+    end
+
+    subgraph CDN["Tầng 1: Netlify Edge CDN (Frontend SPA)"]
+        NetlifyStatic["Giao diện Tĩnh (HTML5, Vanilla JS, Tailwind CSS, FontAwesome)"]
+        NetlifyProxy["Netlify API Rewrite Proxy\n/api/* -> :splat (Status 200 Rewrite)"]
+    end
+
+    subgraph CloudApp["Tầng 2: Cloud Container Runtime (Backend)"]
+        Render["Render / Railway / Docker Web Service\nSpring Boot 4 / Java 21 LTS\nSpring Security (CORS + CSRF) + HikariCP"]
+    end
+
+    subgraph CloudDB["Tầng 3: Cloud Managed Database"]
+        Neon["Neon Serverless PostgreSQL / Supabase\nPostgreSQL 16+ (SSL Mandated ?sslmode=require)"]
+    end
+
+    Browser -->|"1. Tải giao diện tĩnh (HTTPS: xyz-auto-service.netlify.app)"| NetlifyStatic
+    Browser -->|"2. Gọi API cùng domain: /api/*"| NetlifyProxy
+    NetlifyProxy -->|"3. Proxy chuyển tiếp HTTP (Internal 200 Rewrite)"| Render
+    Render -->|"4. Truy vấn CSDL qua JDBC SSL Pool"| Neon
+
+    style Client fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    style CDN fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
+    style CloudApp fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    style CloudDB fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
 ```
 
-### Nguyên lý vận hành:
-* **Không cần chạy server frontend riêng**: Không cần Node.js, `npm start`, hay reverse proxy. Spring Boot phân phối toàn bộ giao diện tĩnh từ cùng origin với API (`/api/**`).
-* **Không gặp lỗi CORS & Session**: Session Cookie (`JSESSIONID`) và CSRF Token (`X-CSRF-TOKEN`) được trình duyệt quản lý tự nhiên và bảo mật cao (`HttpOnly`, `SameSite=Lax`).
-* **Hot-Sync khi phát triển**: Khi sửa file trong `frontend/`, chỉ cần chạy lệnh Maven hoặc khởi động lại backend để `maven-resources-plugin` sao chép bản mới vào `target/classes/static/`.
+### Ưu điểm vượt trội của Kiến trúc Netlify Proxy:
+* **Loại bỏ hoàn toàn rào cản CORS**: Trình duyệt chỉ gửi request tới chính domain Netlify (`https://xyz-service.netlify.app/api/*`), Netlify Edge tự động chuyển tiếp tới Backend mà không phát sinh lỗi cross-origin.
+* **Không mất Session Cookie trên Safari / Chrome**: Cookie xác thực (`JSESSIONID`) được trình duyệt coi là First-Party Cookie, không bị các chính sách chặn cookie bên thứ ba (Third-party cookie restrictions) vô hiệu hóa.
+* **Che giấu địa chỉ máy chủ Backend thực tế**: Tăng cường bảo mật và phòng chống tấn công dò quét API trực tiếp.
 
 ---
 
-## 5. HƯỚNG DẪN KHỞI CHẠY NHANH (1-CLICK RUN)
+## 5. TÍNH NĂNG MỚI & TRẢI NGHIỆM NGƯỜI DÙNG (UX ENHANCEMENTS)
+
+Nhằm nâng cao trải nghiệm thực tế cho khách hàng và nhân viên, hệ thống đã được trang bị các tính năng thân thiện:
+
+### 1. Nút Ẩn/Hiện Mật Khẩu (Password Visibility Toggle)
+* Tại tất cả các trường nhập mật khẩu:
+  * Modal Đăng nhập (`#loginPasswordInput`)
+  * Form Đăng ký khách hàng mới (`#registerPassword`)
+  * Modal Thêm tài khoản nhân viên của Quản lý (`#newUserPassword`)
+* Người dùng có thể bấm vào biểu tượng con mắt (`fa-solid fa-eye` ➔ `fa-solid fa-eye-slash`) để kiểm tra lại mật khẩu vừa nhập, tránh gõ nhầm trên điện thoại hoặc máy tính bảng. Tự động ẩn lại khi đóng modal.
+
+### 2. Chuẩn Hóa Số Điện Thoại Thông Minh (Intelligent Phone Normalization)
+* Người dùng có thể nhập số điện thoại theo bất kỳ thói quen nào:
+  * Định dạng quốc tế: `+84901234567` hoặc `84901234567`
+  * Có dấu cách: `090 123 4567` hoặc `0901 234 567`
+  * Có dấu chấm, gạch ngang: `0901.234.567` hoặc `0901-234-567`
+* Cả Frontend (`normalizePhoneNumber`) và Backend (`WorkshopService.normalizePhone`) đều tự động xử lý và chuẩn hóa về dạng chuẩn Việt Nam: **`0901234567`** trước khi tra cứu, tạo tài khoản hoặc lưu lịch hẹn.
+
+### 3. Thông Báo Lỗi Tiếng Việt Rõ Ràng (Friendly Localized Validation Toasts)
+* Không còn hiển thị thông báo chung chung khó hiểu như `"Thông tin không hợp lệ: phone"`.
+* Hệ thống hiển thị Toast lỗi tiếng Việt chi tiết ngay tại chỗ:
+  * *Số điện thoại không đúng định dạng (yêu cầu 10 chữ số bắt đầu bằng số 0)*.
+  * *Mật khẩu phải có ít nhất 8 ký tự (tối đa 72 ký tự)*.
+  * *Họ và tên không được để trống*.
+  * *Biển số xe không hợp lệ (từ 4 đến 30 ký tự)*.
+  * *Vui lòng chọn ít nhất một dịch vụ bảo dưỡng*.
+
+### 4. Cơ Chế Tự Động Phục Hồi CSRF Token (Auto-Retry on CSRF Expired)
+* Khi phiên làm việc bị ngắt hoặc CSRF token hết hạn, client tự động gửi request lấy CSRF token mới và thực hiện lại tác vụ (retry 1 lần) hoàn toàn trong suốt với người dùng, không gây gián đoạn hay hiện lỗi 403 phiền phức.
+
+---
+
+## 6. DANH BẠ TÀI KHOẢN MẪU DÙNG THỬ HỆ THỐNG
+
+Hệ thống được nạp sẵn 3 tài khoản mẫu đại diện cho 3 phân hệ nghiệp vụ chính (Mật khẩu chung cho cả 3 tài khoản là: **`12345678`**):
+
+| Vai trò người dùng | Số điện thoại đăng nhập | Mật khẩu mặc định | Giao diện hiển thị | Nhiệm vụ kiểm thử / Trình diễn nghiệp vụ |
+| :--- | :---: | :---: | :---: | :--- |
+| **Quản lý xưởng (`MANAGER`)** | **`0901234567`** | `12345678` | Huy hiệu tím: *Quản lý xưởng* | Quản lý danh mục 8 dịch vụ (F01), đổi năng lực tiếp nhận xưởng từ 1–5 xe/slot (F07), xem biểu đồ Dashboard thống kê & doanh thu dự kiến (F08), tạo tài khoản nhân viên. |
+| **Lễ tân tiếp nhận (`STAFF`)** | **`0912345678`** | `12345678` | Huy hiệu xanh: *Nhân viên tiếp nhận* | Xem danh sách lịch hẹn toàn xưởng (F04), duyệt xe (`CONFIRMED`), gán Khoang 1–4 và chỉ định Kỹ thuật viên phụ trách, cập nhật tiến độ `IN_PROGRESS` / `COMPLETED`, tiếp nhận khách vãng lai tại quầy. |
+| **Khách hàng mẫu (`CUSTOMER`)** | **`0988888888`** | `12345678` | Huy hiệu xám: *Khách hàng* | Khách hàng VIP trực tuyến, đặt lịch bảo dưỡng/sửa chữa (F03), theo dõi tiến độ xe theo thời gian thực (F06), chủ động đổi ngày/giờ hoặc hủy lịch hẹn (F05). |
+
+> [!TIP]
+> Khách hàng mới có thể tự bấm **Đăng nhập / Đăng ký** trên giao diện web để tạo tài khoản riêng bằng số điện thoại bất kỳ (hệ thống tự động hỗ trợ băm mật khẩu bảo mật BCrypt).
+
+---
+
+## 7. HƯỚNG DẪN TRIỂN KHAI INTERNET NHANH (NETLIFY + RENDER + NEON)
+
+Dự án cung cấp bộ tài liệu triển khai toàn diện với hình ảnh minh họa chi tiết tại [**`docs/DEPLOYMENT_GUIDE.md`**](docs/DEPLOYMENT_GUIDE.md). Dưới đây là tóm tắt 3 bước triển khai nhanh:
+
+```text
+Bước 1: Tạo DB Neon & chạy SQL  ➔  Bước 2: Deploy Backend lên Render  ➔  Bước 3: Deploy Frontend lên Netlify
+```
+
+### Bước 1: Khởi tạo Cơ sở dữ liệu Cloud (Neon.tech)
+1. Đăng ký tài khoản miễn phí tại [https://neon.tech](https://neon.tech).
+2. Tạo Project mới: `xyz-auto-service` (chọn Region `ap-southeast-1` Singapore, PostgreSQL 16).
+3. Vào tab **SQL Editor**, dán toàn bộ nội dung file [`Data/cloud_postgres_init.sql`](Data/cloud_postgres_init.sql) và nhấn **Run**.
+4. Sao chép chuỗi kết nối (`Connection string` dạng `postgresql://...`).
+
+### Bước 2: Triển khai Backend Web Service (Render.com)
+1. Đăng ký tài khoản tại [https://render.com](https://render.com).
+2. Tạo **New Web Service** ➔ Kết nối Git Repo `XYZ-Auto-Service`.
+3. Cấu hình:
+   * **Runtime**: `Docker` (sử dụng [`Dockerfile`](Dockerfile) hoặc file thiết lập sẵn [`render.yaml`](render.yaml)).
+   * **Plan**: `Free`.
+   * **Health Check Path**: `/api/csrf`.
+4. Thiết lập các biến môi trường (**Environment Variables**):
+   * `SPRING_PROFILES_ACTIVE` = `postgres`
+   * `DATABASE_URL` = `<Chuỗi kết nối Neon ở Bước 1>`
+   * `PORT` = `8080`
+   * `SESSION_COOKIE_SECURE` = `true`
+   * `APP_CORS_ALLOWED_ORIGINS` = `https://*.netlify.app,http://localhost:3000`
+5. Nhấn **Create Web Service**. Chờ ~3 phút, lấy URL backend (ví dụ: `https://xyz-backend.onrender.com`).
+
+### Bước 3: Triển khai Frontend lên Netlify
+1. Đăng nhập [https://app.netlify.com](https://app.netlify.com).
+2. Chọn **Add new site** ➔ **Import an existing project** (kết nối repo GitHub).
+3. Cấu hình bản dựng:
+   * **Base directory**: `.`
+   * **Build command**: `node ./build-redirects.js || true`
+   * **Publish directory**: `frontend`
+4. Thêm biến môi trường:
+   * `BACKEND_URL` = `https://xyz-backend.onrender.com` *(URL Render ở Bước 2, không có gạch chéo cuối)*.
+5. Nhấn **Deploy site**. Trang web sẽ hoạt động trực tuyến sau ~10 giây tại tên miền Netlify của bạn!
+
+*(Ngoài ra bạn có thể kéo thả trực tiếp thư mục `frontend/` vào [Netlify Drop](https://app.netlify.com/drop) - xem chi tiết tại [Hướng dẫn Triển khai](docs/DEPLOYMENT_GUIDE.md)).*
+
+---
+
+## 8. HƯỚNG DẪN KHỞI CHẠY CỤC BỘ (1-CLICK RUN & LOCAL DOCKER)
 
 Yêu cầu môi trường: **Java 21 (JDK 21 LTS)**.
 
@@ -123,7 +238,7 @@ cd backend
     ```bash
     sh run-dev.sh
     ```
-* **Chế độ PostgreSQL (Docker Compose)**:
+* **Chế độ PostgreSQL (Docker Compose cục bộ)**:
   - Khởi động cơ sở dữ liệu:
     ```bat
     docker compose up -d
@@ -141,68 +256,24 @@ cd backend
 👉 Mở trình duyệt truy cập: **`http://localhost:8080`**
 
 ### Cách 2: Khởi chạy trên IntelliJ IDEA hoặc VS Code
-1. Mở **IntelliJ IDEA** ➔ Chọn **Open** ➔ Duyệt đến thư mục **`backend`**.
+1. Mở **IntelliJ IDEA** ➔ Chọn **Open** ➔ Duyệt đến thư mục `demo`.
 2. Kiểm tra Project SDK: Vào **File ➔ Project Structure ➔ Project ➔ SDK** chọn **JDK 21** (ví dụ `ms-21.0.11`).
-3. Mở file `backend/src/main/java/com/example/demo/DemoApplication.java` và bấm **Run ▶** (hoặc `Shift + F10`).
-4. Ứng dụng tự động khởi chạy hoàn tất sau 2–3 giây tại: **`http://localhost:8080`**.
+3. Trên thanh công cụ Run Configurations góc trên bên phải, chọn:
+   👉 **`XYZ Auto Service (1-Click Run)`**
+4. Bấm nút **Run ▶** (hoặc `Shift + F10`).
+5. Ứng dụng tự động khởi chạy hoàn tất sau 2–3 giây tại: **`http://localhost:8080`**.
 
 ---
 
-## 6. HƯỚNG DẪN TRIỂN KHAI VỚI POSTGRESQL THẬT
-
-### Triển khai tự động bằng Docker Compose (Cổng chuẩn 5432)
-```bash
-# Trong thư mục backend (hoặc thư mục gốc dự án)
-docker compose up -d
-
-# Kiểm tra trạng thái container xyz_postgres
-docker compose ps
-```
-Container tự động nạp cấu trúc bảng và dữ liệu mẫu từ `xyz_auto_service_postgresql.sql`.
-
-### Cấu hình biến môi trường kết nối:
-Nếu chạy ứng dụng ngoài Docker hoặc trên máy chủ khác:
-```bash
-# Windows PowerShell
-$env:SPRING_PROFILES_ACTIVE = "postgres"
-$env:DB_URL = "jdbc:postgresql://localhost:5432/xyz_auto_service"
-$env:DB_USER = "postgres"
-$env:DB_PASSWORD = "postgres"
-.\mvnw.cmd spring-boot:run
-
-# Linux / macOS Bash
-export SPRING_PROFILES_ACTIVE=postgres
-export DB_URL=jdbc:postgresql://localhost:5432/xyz_auto_service
-export DB_USER=postgres
-export DB_PASSWORD=postgres
-./mvnw spring-boot:run
-```
-
----
-
-## 7. DANH BẠ TÀI KHOẢN MẪU DÙNG THỬ HỆ THỐNG
-
-Hệ thống cung cấp sẵn 3 tài khoản mặc định đại diện cho 3 phân quyền nghiệp vụ (mật khẩu chung: **`12345678`**):
-
-| Vai trò người dùng | Số điện thoại đăng nhập | Mật khẩu | Phạm vi quyền hạn kiểm thử |
-| :--- | :---: | :---: | :--- |
-| **Quản lý Xưởng (`MANAGER`)** | **`0901234567`** | `12345678` | Quản lý danh mục dịch vụ (F01), điều chỉnh năng lực xưởng (F07), phân quyền tài khoản, xem thống kê & doanh thu (F08). |
-| **Lễ tân Tiếp nhận (`STAFF`)** | **`0912345678`** | `12345678` | Quản lý lịch hẹn toàn xưởng (F04), duyệt xe (`CONFIRMED`), gán Khoang 1–4, gán KTV phụ trách, tiếp nhận xe vãng lai (`walkIn`). |
-| **Khách hàng Mẫu (`CUSTOMER`)** | **`0988888888`** | `12345678` | Khách VIP, đặt lịch trực tuyến (F03), theo dõi tiến độ sửa chữa xe (F06), đổi hoặc hủy lịch hẹn (F05). |
-
-*(Người dùng mới có thể tự tạo tài khoản Khách hàng trực tiếp trên form Đăng ký của giao diện web).*
-
----
-
-## 8. KỊCH BẢN 6 BƯỚC TRÌNH DIỄN LUỒNG NGHIỆP VỤ CHUẨN
+## 9. KỊCH BẢN 6 BƯỚC TRÌNH DIỄN LUỒNG NGHIỆP VỤ CHUẨN
 
 ```text
 Khách xem dịch vụ ➔ Đăng nhập ➔ Đặt lịch trực tuyến ➔ Kiểm tra năng lực trạm ➔ Nhân viên duyệt & gán khoang ➔ Cập nhật tiến độ
 ```
 
-1. **Bước 1 (Xem dịch vụ)**: Truy cập `http://localhost:8080`, duyệt 8 gói bảo dưỡng tiêu chuẩn với đơn giá, thời lượng niêm yết rõ ràng.
-2. **Bước 2 (Đăng nhập Khách hàng)**: Đăng nhập tài khoản `0988888888` / `12345678`.
-3. **Bước 3 (Thao tác Đặt lịch)**: Chọn ngày hẹn, chọn khung giờ trống (ví dụ `09:00`), nhập Biển số xe (`51K-888.88`), Model (`Mazda CX-5`), tick chọn gói bảo dưỡng và nhấn **Xác nhận đặt lịch**.
+1. **Bước 1 (Xem dịch vụ)**: Truy cập trang web, duyệt 8 gói bảo dưỡng tiêu chuẩn với đơn giá, thời lượng niêm yết rõ ràng.
+2. **Bước 2 (Đăng nhập Khách hàng)**: Đăng nhập tài khoản `0988888888` / `12345678` (thử tính năng bật/tắt mắt xem mật khẩu).
+3. **Bước 3 (Thao tác Đặt lịch)**: Chọn ngày hẹn, chọn khung giờ trống (ví dụ `09:00`), nhập Biển số xe (`30A-999.88`), Model (`Mazda CX-5`), tick chọn gói bảo dưỡng và nhấn **Xác nhận đặt lịch**.
 4. **Bước 4 (Hệ thống xác thực điều kiện)**: Hệ thống khóa bi quan cấu hình xưởng, kiểm tra giới hạn xe/slot (tối đa 3), kiểm tra trùng biển số, lưu lịch hẹn ở trạng thái `PENDING`.
 5. **Bước 5 (Khách theo dõi tiến độ)**: Chuyển sang tab **"Tra cứu lịch hẹn"**, xem thông tin lịch hẹn mới tạo hiển thị trực quan ở trạng thái chờ tiếp nhận.
 6. **Bước 6 (Nhân viên tiếp nhận & duyệt xe)**:
@@ -213,9 +284,9 @@ Khách xem dịch vụ ➔ Đăng nhập ➔ Đặt lịch trực tuyến ➔ Ki
 
 ---
 
-## 9. MINH CHỨNG KIỂM THỬ TÍCH HỢP TỰ ĐỘNG
+## 10. MINH CHỨNG KIỂM THỬ TÍCH HỢP TỰ ĐỘNG (PASS 100%)
 
-### 9.1. Bộ kiểm thử tự động JUnit 5 & Spring Boot Test (Pass 100%)
+### 10.1. Bộ kiểm thử tự động JUnit 5 & Spring Boot Test (9/9 Tests Passed)
 Chạy bộ kiểm thử tự động tại thư mục `backend`:
 ```powershell
 # Trên Windows PowerShell
@@ -224,51 +295,59 @@ cd backend
 .\mvnw.cmd test
 ```
 
-**Kết quả thực thi thực tế (3/3 Test Suites Passed):**
+**Kết quả kiểm thử thực tế (100% Pass, 0 Failure, 0 Error):**
 ```text
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
+[INFO] Running com.example.demo.CloudDatabaseEnvironmentPostProcessorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.923 s
+[INFO] Running com.example.demo.PhoneNormalizationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s
 [INFO] Running com.example.demo.DemoApplicationTests
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.51 s
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 20.28 s
 [INFO] Running com.example.demo.InitialDataTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.12 s
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.318 s
 [INFO] Running com.example.demo.WorkshopFlowTests
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.90 s
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.26 s
+[INFO] Running com.example.demo.NeonConnectivityTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.145 s
 [INFO] 
 [INFO] Results:
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
 ```
 
-### 9.2. Kịch bản Kiểm thử Smoke Luồng Nghiệp vụ (Python E2E)
+### 10.2. Kịch bản Kiểm thử Smoke Luồng Nghiệp vụ (Python E2E)
 Dự án đi kèm script kiểm thử đầu cuối không cần thư viện ngoài tại `backend/scripts/smoke_booking.py`:
 ```bash
-# Khi server đang chạy tại http://localhost:8080:
+# Khi server đang chạy tại http://localhost:8080 (hoặc URL Netlify/Render):
 python backend/scripts/smoke_booking.py
 ```
 *Script tự động thực hiện: Xác thực CSRF ➔ Đăng nhập Khách hàng ➔ Tạo lịch hẹn trực tuyến ➔ Đăng nhập Lễ tân ➔ Duyệt và gán khoang ➔ Xác minh trạng thái `CONFIRMED`.*
 
 ---
 
-## 10. CẤU TRÚC MÃ NGUỒN CHUẨN HÓA
+## 11. CẤU TRÚC MÃ NGUỒN CHUẨN HÓA
 
 ```text
-XYZ_Auto_Service/
-├── frontend/                               <-- Phân hệ giao diện người dùng
-│   ├── index.html                          <-- Giao diện SPA chính
-│   ├── app.js                              <-- Logic điều khiển UI & REST client
+XYZ-Auto-Service/
+├── frontend/                               <-- Phân hệ giao diện tĩnh (HTML5, Tailwind CSS, JS)
+│   ├── index.html                          <-- Giao diện SPA, Password Visibility Toggle, Modal
+│   ├── app.js                              <-- Logic điều khiển UI, chuẩn hóa SĐT, CSRF retry
 │   ├── workshop.css                        <-- CSS đã biên dịch sẵn sàng phục vụ
-│   ├── tailwind.input.css                  <-- CSS đầu vào mở rộng của Tailwind
-│   ├── tailwind.config.cjs                 <-- Cấu hình theme & typography
-│   ├── vendor/fontawesome/                 <-- Thư viện Font Awesome bản quyền
+│   ├── _redirects                          <-- Cấu hình Netlify Proxy tĩnh
+│   ├── netlify.toml                        <-- Cấu hình Netlify độc lập cho thư mục frontend
+│   ├── build-redirects.js                  <-- Script sinh cấu hình proxy tự động
+│   ├── vendor/fontawesome/                 <-- Thư viện Font Awesome bản quyền (webfonts tối ưu)
 │   └── README.md                           <-- Hướng dẫn phân hệ frontend
-├── backend/                                <-- Phân hệ máy chủ Spring Boot
+├── backend/                                <-- Phân hệ máy chủ Spring Boot (Java 21)
 │   ├── pom.xml                             <-- Cấu hình Maven & maven-resources-plugin
 │   ├── mvnw, mvnw.cmd                      <-- Maven Wrapper độc lập
-│   ├── .mvn/wrapper/                       <-- Cấu hình phiên bản Maven Wrapper
+│   ├── Dockerfile                          <-- Dockerfile phân hệ backend
+│   ├── render.yaml                         <-- Mẫu Blueprint Render cho backend
 │   ├── docker-compose.yml                  <-- Dịch vụ PostgreSQL container
 │   ├── xyz_auto_service_postgresql.sql     <-- DDL & DML khởi tạo CSDL PostgreSQL
 │   ├── run-dev.cmd, run-dev.sh             <-- Khởi chạy nhanh profile dev (H2)
@@ -276,28 +355,33 @@ XYZ_Auto_Service/
 │   ├── scripts/smoke_booking.py            <-- Kịch bản kiểm thử E2E tự động
 │   ├── src/main/java/com/example/demo/
 │   │   ├── DemoApplication.java            <-- Spring Boot Application Entry Point
-│   │   ├── SecurityConfig.java             <-- Cấu hình Spring Security, Session & CSRF
-│   │   ├── WorkshopController.java         <-- REST Controllers & Exception Handlers
-│   │   ├── WorkshopService.java            <-- Logic nghiệp vụ, Pessimistic Lock, RBAC
+│   │   ├── SecurityConfig.java             <-- Cấu hình Spring Security, CORS, Session & CSRF
+│   │   ├── WorkshopController.java         <-- REST Controllers & Exception Handlers tiếng Việt
+│   │   ├── WorkshopService.java            <-- Logic nghiệp vụ, Chuẩn hóa SĐT, Pessimistic Lock
 │   │   ├── WorkshopDomain.java             <-- JPA Entities chuẩn hóa 3NF
 │   │   ├── InitialData.java                <-- Seed 8 dịch vụ & 3 tài khoản mẫu
 │   │   ├── ApiModels.java                  <-- DTOs & Validation Contracts
+│   │   ├── CloudDatabaseEnvironmentPostProcessor.java <-- Phân giải DATABASE_URL tự động
 │   │   ├── AccountRepository.java          <-- Repository Quản lý Tài khoản
 │   │   ├── AppointmentRepository.java      <-- Repository Quản lý Lịch hẹn
 │   │   ├── ServiceRepository.java          <-- Repository Quản lý Dịch vụ
 │   │   └── SettingsRepository.java         <-- Repository Quản lý Cấu hình trạm
 │   ├── src/main/resources/
-│   │   ├── application.properties          <-- Cấu hình Spring Boot chung
+│   │   ├── application.properties          <-- Cấu hình Spring Boot chung, Port, Session
 │   │   ├── application-dev.properties      <-- Profile H2 In-Memory chạy 1-Click
-│   │   └── application-postgres.properties <-- Profile kết nối PostgreSQL thật
-│   ├── src/test/java/                      <-- Bộ kiểm thử tự động JUnit 5
-│   └── README.md                           <-- Hướng dẫn phân hệ backend
+│   │   ├── application-postgres.properties <-- Profile kết nối Cloud / Local PostgreSQL
+│   │   └── META-INF/spring/org.springframework.boot.env.EnvironmentPostProcessor.imports
+│   └── src/test/java/                      <-- Bộ kiểm thử tự động JUnit 5 (9 tests)
+├── Data/                                   <-- Dữ liệu và kịch bản di chuyển CSDL
+│   ├── cloud_postgres_init.sql             <-- Kịch bản SQL tương thích 100% Cloud PostgreSQL
+│   └── xyz_auto_service_postgresql.sql     <-- Kịch bản SQL chuẩn hóa đồng bộ
 ├── docs/                                   <-- Bộ hồ sơ tài liệu dự án hoàn chỉnh (@docs)
+│   ├── DEPLOYMENT_GUIDE.md                 <-- Hướng dẫn Triển khai Internet Toàn diện (Netlify + Render + Neon)
+│   ├── database-cloud-guide.md             <-- Cẩm nang CSDL Cloud PostgreSQL & Connection Strings
 │   ├── phieu-pham-vi.md                    <-- Phiếu xác định phạm vi dự án (F01–F09)
 │   ├── srs.md                              <-- Đặc tả yêu cầu phần mềm chi tiết
 │   ├── architecture.md                     <-- Tài liệu kiến trúc hệ thống
 │   ├── api-contract.md                     <-- Hợp đồng giao diện REST API
-│   ├── DEPLOYMENT_GUIDE.md                 <-- Hướng dẫn triển khai Internet & vận hành
 │   ├── test-plan.md                        <-- Kế hoạch kiểm thử chất lượng
 │   ├── test-report.md                      <-- Báo cáo kết quả kiểm thử tự động
 │   ├── checklist-bao-mat.md                <-- Báo cáo an toàn thông tin & OWASP
@@ -306,28 +390,27 @@ XYZ_Auto_Service/
 │   ├── usecase.drawio                      <-- Sơ đồ Use Case chuẩn XML
 │   ├── erd.drawio                          <-- Sơ đồ CSDL ERD 3NF chuẩn XML
 │   └── architecture.drawio                 <-- Sơ đồ Kiến trúc hệ thống chuẩn XML
-├── .specify/                               <-- Bộ nhớ quy chuẩn & Hiến chương Spec-Kit
-├── .agents/                                <-- Bộ kỹ năng của AI Agent
-├── .scratch/                               <-- Nhật ký công việc và theo dõi tính năng
-├── tasks/                                  <-- Kế hoạch thực hiện tác vụ dự án
-├── design/                                 <-- Bản vẽ thiết kế mẫu giao diện
+├── Dockerfile                              <-- Multi-stage Production Container tại thư mục gốc
+├── netlify.toml                            <-- Cấu hình Netlify Edge & API Rewrite Proxy gốc
+├── render.yaml                             <-- Render Infrastructure as Code Blueprint gốc
+├── build-redirects.js                      <-- Script sinh file proxy tự động cho Netlify
 ├── docker-compose.yml                      <-- Docker Compose tiện ích tại thư mục gốc
-├── xyz_auto_service_postgresql.sql         <-- Kịch bản SQL cơ sở dữ liệu gốc
-├── AGENTS.md                               <-- Chỉ dẫn vận hành của Agent
+├── AGENTS.md                               <-- Chỉ dẫn vận hành của Agent Swarm
 ├── .gitignore                              <-- Cấu hình loại trừ tệp nhị phân và target/
 └── README.md                               <-- Hướng dẫn tổng thể đồ án
 ```
 
 ---
 
-## 11. HỆ THỐNG TÀI LIỆU DỰ ÁN (@docs)
+## 12. HỆ THỐNG TÀI LIỆU DỰ ÁN (@docs)
 
 Tất cả các tài liệu kỹ thuật chuyên sâu được biên soạn đầy đủ và đặt tại thư mục [`docs/`](docs/):
+* 🚀 [**Hướng dẫn Triển khai Internet Toàn diện**](docs/DEPLOYMENT_GUIDE.md)
+* 🗄️ [**Cẩm nang CSDL Cloud PostgreSQL**](docs/database-cloud-guide.md)
 * 📋 [Phiếu xác định phạm vi dự án](docs/phieu-pham-vi.md)
 * 📖 [Đặc tả yêu cầu phần mềm (SRS)](docs/srs.md)
 * 🏛️ [Tài liệu Kiến trúc hệ thống](docs/architecture.md)
 * 🔌 [Hợp đồng giao diện API (API Contract)](docs/api-contract.md)
-* 🚀 [Hướng dẫn Triển khai Internet & Vận hành](docs/DEPLOYMENT_GUIDE.md)
 * 🧪 [Kế hoạch kiểm thử (Test Plan)](docs/test-plan.md)
 * 📊 [Báo cáo kết quả kiểm thử (Test Report)](docs/test-report.md)
 * 🛡️ [Checklist An toàn thông tin & Bảo mật](docs/checklist-bao-mat.md)
@@ -339,14 +422,14 @@ Tất cả các tài liệu kỹ thuật chuyên sâu được biên soạn đ�
 
 ---
 
-## 12. ĐỘI NGŨ PHÁT TRIỂN & ĐÓNG GÓP THÀNH VIÊN (CONTRIBUTORS)
+## 13. ĐỘI NGŨ PHÁT TRIỂN & ĐÓNG GÓP THÀNH VIÊN (CONTRIBUTORS)
 
 Chi tiết hồ sơ đóng góp và ma trận trách nhiệm RACI được ghi nhận tại [**`CONTRIBUTORS.md`**](CONTRIBUTORS.md).
 
 | Họ và tên | MSSV | Vai trò chính | GitHub | Đóng góp trọng tâm |
 | :--- | :---: | :--- | :---: | :--- |
 | **Nguyễn Bá Anh Khôi** | `2374802010247` | **Scrum Master** kiêm Backend Dev | [@Khoidep-zai](https://github.com/Khoidep-zai) | Quản trị dự án, Sprint, EVM, kiến trúc Spring Boot, API, Security & Pessimistic Lock, điều phối tích hợp. |
-| **Trần Văn Khoa** | `2374802013414` | **Product Owner** kiêm Frontend Dev | [@Khoa-Tran](https://github.com/) | Quản lý Product Backlog, User Stories, thiết kế Figma, lập trình giao diện người dùng SPA. |
+| **Trần Văn Khoa** | `2374802013414` | **Product Owner** kiêm Frontend Dev | [@Khoa-Tran](https://github.com/) | Quản lý Product Backlog, User Stories, thiết kế Figma, lập trình giao diện người dùng SPA, tối ưu UX & bảo mật. |
 | **Nguyễn Tiến Dũng** | `2274802010102` | **Developer** kiêm QA & Database | [@NguyenTienDung29](https://github.com/NguyenTienDung29) | Tách biệt mô-đun Frontend/Backend & cấu hình Maven đóng gói, tối ưu bảo mật `WorkshopService` (ràng buộc SĐT chính chủ), mở rộng `WorkshopFlowTests`, kịch bản E2E `smoke_booking.py`, chuẩn hóa PostgreSQL & script khởi chạy 1-click `run-dev.*` / `run-postgres.*`. |
 
 ---

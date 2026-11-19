@@ -9,7 +9,7 @@ public final class ApiModels {
 
     public record AccountInput(
             @NotBlank @Size(max = 100) String name,
-            @NotBlank @Pattern(regexp = "0[0-9]{9,10}") String phone,
+            @NotBlank @Pattern(regexp = "(0|\\+84|84)[0-9. -]{8,15}") String phone,
             @NotBlank @Size(min = 8, max = 72) String password,
             @Size(max = 200) String meta,
             WorkshopDomain.Role role) {}
@@ -27,7 +27,7 @@ public final class ApiModels {
 
     public record BookingInput(
             @NotBlank @Size(max = 100) String customerName,
-            @NotBlank @Pattern(regexp = "0[0-9]{9,10}") String phone,
+            @NotBlank @Pattern(regexp = "(0|\\+84|84)[0-9. -]{8,15}") String phone,
             @NotBlank @Pattern(regexp = "[A-Za-z0-9. -]{4,30}") String licensePlate,
             @NotBlank @Size(max = 100) String carModel,
             @NotNull LocalDate date,

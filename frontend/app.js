@@ -223,9 +223,51 @@ renderServiceCategoryPills = function () {
   }
 };
 
+function togglePasswordVisibility(inputId, iconId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (!input) return;
+  const isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  if (icon) {
+    if (isPassword) {
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
+}
+window.togglePasswordVisibility = togglePasswordVisibility;
+
+function resetPasswordVisibility(inputId, iconId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (input) input.type = 'password';
+  if (icon) {
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+
+function normalizePhoneNumber(phone) {
+  if (!phone || typeof phone !== 'string') return '';
+  let cleaned = phone.trim().replace(/[\s.\-()]/g, '');
+  if (cleaned.startsWith('+84')) {
+    cleaned = '0' + cleaned.slice(3);
+  } else if (/^84\d{9,10}$/.test(cleaned)) {
+    cleaned = '0' + cleaned.slice(2);
+  }
+  return cleaned;
+}
+window.normalizePhoneNumber = normalizePhoneNumber;
+
 setCustomerTrackScope = function () { customerTrackScope = 'MINE'; renderCustomerTrackingList(); };
 openLoginModal = function () {
   document.getElementById('userDropdownMenu').classList.add('hidden');
+  resetPasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon');
+  resetPasswordVisibility('registerPassword', 'registerPasswordToggleIcon');
   toggleRegistration(false); openModal('modalLogin');
   document.getElementById('loginPhoneInput').focus();
 };
@@ -238,23 +280,62 @@ async function login(phone, password) {
   await api('/api/login', {method:'POST', form:true, body:{phone, password}});
   csrfToken = null; await refreshCsrf(); await refreshState();
   closeModal('modalLogin');
-  const account = appState.accounts.find(a => a.id === appState.activeAccountId);
-  if (account.role === 'CUSTOMER') {
-    document.getElementById('bookCustomerName').value = account.name;
-    document.getElementById('bookCustomerPhone').value = account.phone;
+  const account = Array.isArray(appState.accounts) ? appState.accounts.find(a => a.id === appState.activeAccountId) : null;
+  if (account && account.role === 'CUSTOMER') {
+    document.getElementById('bookCustomerName').value = account.name || '';
+    document.getElementById('bookCustomerPhone').value = account.phone || '';
   }
   document.getElementById('loginPasswordInput').value = '';
   document.getElementById('registerPassword').value = '';
+  resetPasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon');
+  resetPasswordVisibility('registerPassword', 'registerPasswordToggleIcon');
   showToast('Đăng nhập thành công', 'success');
 }
 handlePhoneLogin = function () {
-  perform(() => login(document.getElementById('loginPhoneInput').value.trim(), document.getElementById('loginPasswordInput').value));
+  const phoneRaw = document.getElementById('loginPhoneInput').value;
+  const password = document.getElementById('loginPasswordInput').value;
+  const phone = normalizePhoneNumber(phoneRaw);
+
+  if (!phone || !/^0\d{9,10}$/.test(phone)) {
+    showToast('Số điện thoại không đúng định dạng (bắt đầu bằng 0, gồm 10-11 chữ số)', 'error');
+    document.getElementById('loginPhoneInput').focus();
+    return;
+  }
+  if (!password || password.length < 8) {
+    showToast('Mật khẩu phải có ít nhất 8 ký tự', 'error');
+    document.getElementById('loginPasswordInput').focus();
+    return;
+  }
+  document.getElementById('loginPhoneInput').value = phone;
+  perform(() => login(phone, password));
 };
 function registerCustomer() {
+  const nameInput = document.getElementById('registerName');
+  const phoneInput = document.getElementById('registerPhone');
+  const passwordInput = document.getElementById('registerPassword');
+
+  const name = nameInput.value.trim();
+  const phone = normalizePhoneNumber(phoneInput.value);
+  const password = passwordInput.value;
+
+  if (!name) {
+    showToast('Vui lòng nhập họ và tên', 'error');
+    nameInput.focus();
+    return;
+  }
+  if (!phone || !/^0\d{9,10}$/.test(phone)) {
+    showToast('Số điện thoại không đúng định dạng (bắt đầu bằng 0, gồm 10-11 chữ số)', 'error');
+    phoneInput.focus();
+    return;
+  }
+  if (!password || password.length < 8) {
+    showToast('Mật khẩu phải có ít nhất 8 ký tự', 'error');
+    passwordInput.focus();
+    return;
+  }
+
+  phoneInput.value = phone;
   perform(async () => {
-    const name = document.getElementById('registerName').value.trim();
-    const phone = document.getElementById('registerPhone').value.trim();
-    const password = document.getElementById('registerPassword').value;
     await api('/api/register', {method:'POST', body:{name, phone, password, meta:''}});
     await login(phone, password);
   });
@@ -375,15 +456,49 @@ adjustMaxCapacity = function (delta) {
   });
 };
 const originalOpenAddUser = openAddUserModal;
-openAddUserModal = function () { originalOpenAddUser(); document.getElementById('newUserPassword').value = ''; };
+openAddUserModal = function () {
+  originalOpenAddUser();
+  resetPasswordVisibility('newUserPassword', 'newUserPasswordToggleIcon');
+  document.getElementById('newUserPassword').value = '';
+};
 saveNewAccount = function () {
+  const nameInput = document.getElementById('newUserName');
+  const phoneInput = document.getElementById('newUserPhone');
+  const roleInput = document.getElementById('newUserRole');
+  const metaInput = document.getElementById('newUserMeta');
+  const passwordInput = document.getElementById('newUserPassword');
+
+  const name = nameInput.value.trim();
+  const phone = normalizePhoneNumber(phoneInput.value);
+  const role = roleInput.value;
+  const meta = metaInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!name) {
+    showToast('Vui lòng nhập họ và tên', 'error');
+    nameInput.focus();
+    return;
+  }
+  if (!phone || !/^0\d{9,10}$/.test(phone)) {
+    showToast('Số điện thoại không đúng định dạng (bắt đầu bằng 0, gồm 10-11 chữ số)', 'error');
+    phoneInput.focus();
+    return;
+  }
+  if (!password || password.length < 8) {
+    showToast('Mật khẩu ban đầu phải có ít nhất 8 ký tự', 'error');
+    passwordInput.focus();
+    return;
+  }
+
+  phoneInput.value = phone;
   perform(async () => {
-    const body = {name:document.getElementById('newUserName').value.trim(), phone:document.getElementById('newUserPhone').value.trim(),
-      role:document.getElementById('newUserRole').value, meta:document.getElementById('newUserMeta').value.trim(),
-      password:document.getElementById('newUserPassword').value};
+    const body = {name, phone, role, meta, password};
     await api('/api/accounts', {method:'POST', body});
-    document.getElementById('newUserPassword').value = ''; closeModal('modalAddUser');
-    await refreshState(); showToast('Đã tạo tài khoản', 'success');
+    passwordInput.value = '';
+    resetPasswordVisibility('newUserPassword', 'newUserPasswordToggleIcon');
+    closeModal('modalAddUser');
+    await refreshState();
+    showToast('Đã tạo tài khoản', 'success');
   });
 };
 

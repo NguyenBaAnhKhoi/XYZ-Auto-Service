@@ -35,9 +35,24 @@ public class WorkshopService {
     private ResponseStatusException invalid(String message) { return new ResponseStatusException(HttpStatus.BAD_REQUEST, message); }
     private ResponseStatusException conflict(String message) { return new ResponseStatusException(HttpStatus.CONFLICT, message); }
     private String clean(String value) { return value == null ? "" : value.trim(); }
+
+    public static String normalizePhone(String phone) {
+        if (phone == null) return "";
+        String cleaned = phone.replaceAll("[\\s.\\-()]", "");
+        if (cleaned.startsWith("+84")) {
+            cleaned = "0" + cleaned.substring(3);
+        } else if (cleaned.startsWith("84") && cleaned.length() >= 11) {
+            cleaned = "0" + cleaned.substring(2);
+        }
+        return cleaned;
+    }
+
     private Account current(Principal principal) {
         if (principal == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Vui lòng đăng nhập");
-        return accounts.findByPhone(principal.getName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        String phone = normalizePhone(principal.getName());
+        return accounts.findByPhone(phone)
+                .or(() -> accounts.findByPhone(principal.getName()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
     }
     private Settings lockSettings() { return settings.lockSettings().orElseThrow(() -> new IllegalStateException("Thiếu cấu hình xưởng")); }
     private Appointment lockAppointment(Long id) {
@@ -91,9 +106,13 @@ public class WorkshopService {
     public void createAccount(ApiModels.AccountInput input, boolean managerRequest) {
         if (input.password().getBytes(StandardCharsets.UTF_8).length > 72)
             throw invalid("Mật khẩu phải có tối đa 72 byte UTF-8");
-        if (accounts.findByPhone(input.phone()).isPresent()) throw conflict("Số điện thoại đã được đăng ký");
+        String phone = normalizePhone(input.phone());
+        if (!phone.matches("0[0-9]{9,10}")) {
+            throw invalid("Số điện thoại không hợp lệ (yêu cầu 10 chữ số bắt đầu bằng số 0)");
+        }
+        if (accounts.findByPhone(phone).isPresent()) throw conflict("Số điện thoại đã được đăng ký");
         var account = new Account();
-        account.phone = input.phone(); account.name = clean(input.name()); account.meta = clean(input.meta());
+        account.phone = phone; account.name = clean(input.name()); account.meta = clean(input.meta());
         account.role = managerRequest && input.role() != null ? input.role() : Role.CUSTOMER;
         account.passwordHash = passwords.encode(input.password());
         accounts.save(account);
@@ -125,19 +144,23 @@ public class WorkshopService {
     @Transactional
     public Long book(Principal principal, ApiModels.BookingInput input) {
         var actor = current(principal); var config = lockSettings();
+        String bookingPhone = normalizePhone(input.phone());
+        if (!bookingPhone.matches("0[0-9]{9,10}")) {
+            throw invalid("Số điện thoại không hợp lệ (yêu cầu 10 chữ số bắt đầu bằng số 0)");
+        }
         if (input.walkIn()) {
             requireStaff(actor);
         } else {
             // An online booking must belong to the logged-in CUSTOMER, not an arbitrary phone number.
             if (actor.role != Role.CUSTOMER)
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Chỉ khách hàng được đặt lịch trực tuyến");
-            if (!actor.phone.equals(input.phone()))
+            if (!normalizePhone(actor.phone).equals(bookingPhone))
                 throw invalid("Số điện thoại đặt lịch phải trùng với tài khoản đăng nhập");
         }
         var appointment = new Appointment();
-        appointment.customer = input.walkIn() ? accounts.findByPhone(input.phone()).filter(a -> a.role == Role.CUSTOMER).orElse(null) : actor;
+        appointment.customer = input.walkIn() ? accounts.findByPhone(bookingPhone).filter(a -> a.role == Role.CUSTOMER).orElse(null) : actor;
         appointment.customerName = input.walkIn() ? clean(input.customerName()) : actor.name;
-        appointment.phone = input.walkIn() ? input.phone() : actor.phone;
+        appointment.phone = input.walkIn() ? bookingPhone : actor.phone;
         appointment.licensePlate = clean(input.licensePlate()).toUpperCase(Locale.ROOT);
         appointment.carModel = clean(input.carModel()); appointment.date = input.date(); appointment.slot = input.slot();
         appointment.note = clean(input.note());

@@ -71,7 +71,27 @@ public class WorkshopController {
         @ExceptionHandler(MethodArgumentNotValidException.class)
         ResponseEntity<Map<String, String>> validation(MethodArgumentNotValidException ex) {
             var field = ex.getBindingResult().getFieldError();
-            String message = field == null ? "Thông tin không hợp lệ" : "Thông tin không hợp lệ: " + field.getField();
+            if (field == null) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Thông tin không hợp lệ"));
+            }
+            String fieldName = field.getField();
+            String message = switch (fieldName) {
+                case "phone" -> "Số điện thoại không hợp lệ (yêu cầu 10 chữ số bắt đầu bằng số 0)";
+                case "password" -> "Mật khẩu phải từ 8 đến 72 ký tự";
+                case "name", "customerName" -> "Họ và tên không được để trống";
+                case "licensePlate" -> "Biển số xe không hợp lệ (từ 4 đến 30 ký tự)";
+                case "carModel" -> "Dòng xe không được để trống";
+                case "date" -> "Ngày hẹn không hợp lệ";
+                case "slot" -> "Khung giờ hẹn không hợp lệ";
+                case "serviceIds" -> "Vui lòng chọn ít nhất một dịch vụ";
+                case "capacity" -> "Công suất xưởng phải từ 1 đến 5 khoang";
+                case "code" -> "Mã dịch vụ không hợp lệ";
+                case "category" -> "Danh mục dịch vụ không được để trống";
+                case "duration" -> "Thời gian thực hiện dịch vụ không hợp lệ";
+                case "price" -> "Giá dịch vụ không hợp lệ";
+                case "status" -> "Trạng thái lịch hẹn không hợp lệ";
+                default -> "Thông tin không hợp lệ: " + fieldName;
+            };
             return ResponseEntity.badRequest().body(Map.of("message", message));
         }
         @ExceptionHandler(DataIntegrityViolationException.class)
