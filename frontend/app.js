@@ -346,6 +346,18 @@ function normalizePhoneNumber(phone) {
 window.normalizePhoneNumber = normalizePhoneNumber;
 
 setCustomerTrackScope = function () { customerTrackScope = 'MINE'; renderCustomerTrackingList(); };
+quickFillLogin = function (phone, password) {
+  const phoneInput = document.getElementById('loginPhoneInput');
+  const passInput = document.getElementById('loginPasswordInput');
+  if (phoneInput) {
+    phoneInput.value = phone;
+    phoneInput.focus();
+  }
+  if (passInput) {
+    passInput.value = password;
+  }
+  showToast(`Đã chọn tài khoản ${phone} (Mật khẩu: ${password})`, 'info');
+};
 openLoginModal = function () {
   document.getElementById('userDropdownMenu').classList.add('hidden');
   resetPasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon');

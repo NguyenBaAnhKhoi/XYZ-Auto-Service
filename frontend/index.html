@@ -1084,17 +1084,40 @@
       <div id="loginFields" class="space-y-3 text-xs">
         <div>
           <label for="loginPhoneInput" class="block text-[var(--text-muted)] mb-1">Số điện thoại</label>
-          <input type="tel" id="loginPhoneInput" autocomplete="username" class="w-full px-3 py-2 rounded-lg input-field font-mono" />
+          <input type="tel" id="loginPhoneInput" autocomplete="username" class="w-full px-3 py-2 rounded-lg input-field font-mono" placeholder="VD: 0901234567 hoặc 0912345678" />
         </div>
         <div>
           <label for="loginPasswordInput" class="block text-[var(--text-muted)] mb-1">Mật khẩu</label>
           <div class="password-wrapper">
-            <input type="password" id="loginPasswordInput" autocomplete="current-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
+            <input type="password" id="loginPasswordInput" autocomplete="current-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" placeholder="Mật khẩu mặc định: 12345678" />
             <button type="button" onmousedown="event.preventDefault()" onclick="togglePasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
               <i id="loginPasswordToggleIcon" class="fa-solid fa-eye"></i>
             </button>
           </div>
         </div>
+
+        <!-- Hộp gợi ý & Điền nhanh tài khoản mẫu -->
+        <div class="p-3 rounded-xl border border-[var(--border-color)] bg-black/30 space-y-2">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-medium text-zinc-300"><i class="fa-solid fa-id-badge text-signal mr-1.5"></i>Tài khoản mẫu (MK: <strong class="text-signal font-mono">12345678</strong>)</span>
+            <span class="text-[10px] text-zinc-400">1-Click điền nhanh:</span>
+          </div>
+          <div class="grid grid-cols-3 gap-1.5 text-[11px]">
+            <button type="button" onclick="quickFillLogin('0901234567', '12345678')" class="p-2 rounded-lg card-elevated hover:border-signal/60 flex flex-col items-center text-center transition group">
+              <span class="font-semibold text-purple-400 group-hover:text-purple-300"><i class="fa-solid fa-user-shield text-[10px] mr-1"></i>Quản lý</span>
+              <span class="font-mono text-[10px] text-zinc-400 mt-0.5">0901234567</span>
+            </button>
+            <button type="button" onclick="quickFillLogin('0912345678', '12345678')" class="p-2 rounded-lg card-elevated hover:border-signal/60 flex flex-col items-center text-center transition group">
+              <span class="font-semibold text-emerald-400 group-hover:text-emerald-300"><i class="fa-solid fa-wrench text-[10px] mr-1"></i>Tiếp nhận</span>
+              <span class="font-mono text-[10px] text-zinc-400 mt-0.5">0912345678</span>
+            </button>
+            <button type="button" onclick="quickFillLogin('0988888888', '12345678')" class="p-2 rounded-lg card-elevated hover:border-signal/60 flex flex-col items-center text-center transition group">
+              <span class="font-semibold text-sky-400 group-hover:text-sky-300"><i class="fa-solid fa-car text-[10px] mr-1"></i>Khách VIP</span>
+              <span class="font-mono text-[10px] text-zinc-400 mt-0.5">0988888888</span>
+            </button>
+          </div>
+        </div>
+
         <button type="button" id="loginSubmitBtn" onclick="handlePhoneLogin()" class="w-full py-2.5 rounded-lg btn-signal-animated font-semibold">Đăng nhập</button>
         <button type="button" onclick="toggleRegistration(true)" class="w-full py-2 card-elevated rounded-lg">Tạo tài khoản khách hàng</button>
       </div>
@@ -1199,6 +1222,23 @@
       }
     }
     window.togglePasswordVisibility = togglePasswordVisibility;
+
+    // Quick-fill helper for demo accounts
+    function quickFillLogin(phone, password) {
+      const phoneInput = document.getElementById('loginPhoneInput');
+      const passInput = document.getElementById('loginPasswordInput');
+      if (phoneInput) {
+        phoneInput.value = phone;
+        phoneInput.focus();
+      }
+      if (passInput) {
+        passInput.value = password;
+      }
+      if (typeof showToast === 'function') {
+        showToast('Đã chọn tài khoản ' + phone + ' (Mật khẩu: ' + password + ')', 'info');
+      }
+    }
+    window.quickFillLogin = quickFillLogin;
 
     // 8 standard slots from 08:00 to 16:00
     const TIME_SLOTS = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
@@ -2372,6 +2412,6 @@
 
     window.addEventListener('DOMContentLoaded', () => { initTheme(); initializeApp(); });
   </script>
-  <script src="/app.js?v=2.1.0"></script>
+  <script src="/app.js?v=2.2.0"></script>
 </body>
 </html>

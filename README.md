@@ -17,6 +17,20 @@
 
 </div>
 
+> [!IMPORTANT]
+> ### 🌐 TRẢI NGHIỆM HỆ THỐNG TRỰC TUYẾN (LIVE DEMO & LOGIN CREDENTIALS)
+> * **Giao diện Web Khách hàng & Nhân viên (Netlify Edge CDN)**: **[https://qldapmxyz.netlify.app](https://qldapmxyz.netlify.app)**
+> * **Máy chủ Backend API (Render Cloud Docker)**: **[https://xyz-auto-service.onrender.com](https://xyz-auto-service.onrender.com)**
+> * **Mật khẩu dùng thử chung cho tất cả tài khoản mẫu**: **`12345678`**
+>
+> | Phân hệ / Vai trò | Số điện thoại đăng nhập | Mật khẩu mẫu | Tính năng nghiệp vụ chính để kiểm thử |
+> | :--- | :---: | :---: | :--- |
+> | 👑 **Quản lý xưởng (`MANAGER`)** | **`0901234567`** | `12345678` | Cấu hình công suất xưởng (1–5 xe/slot), quản lý bảng giá & danh mục dịch vụ, xem Dashboard thống kê doanh thu |
+> | 🛠️ **Cố vấn / Tiếp nhận (`STAFF`)** | **`0912345678`** | `12345678` | Tiếp nhận xe vãng lai tại quầy, duyệt lịch hẹn (`CONFIRMED`), gán Khoang sửa chữa (Bay 1–4), chỉ định KTV, cập nhật tiến độ |
+> | 🚗 **Khách hàng VIP (`CUSTOMER`)** | **`0988888888`** | `12345678` | Đặt lịch bảo dưỡng trực tuyến, theo dõi tiến độ xe thời gian thực, chủ động đổi khung giờ hẹn hoặc hủy lịch |
+>
+> 💡 *Ngay trên giao diện Web, khi mở khung **Đăng nhập Hệ thống**, hệ thống đã tích hợp sẵn **3 nút 1-Click điền nhanh tài khoản** giúp bạn đăng nhập thử nghiệm ngay lập tức mà không cần gõ phím!*
+
 ---
 
 ## 📑 MỤC LỤC
@@ -161,7 +175,7 @@ Nhằm nâng cao trải nghiệm thực tế cho khách hàng và nhân viên, h
 
 ## 6. DANH BẠ TÀI KHOẢN MẪU DÙNG THỬ HỆ THỐNG
 
-Hệ thống được nạp sẵn 3 tài khoản mẫu đại diện cho 3 phân hệ nghiệp vụ chính (Mật khẩu chung cho cả 3 tài khoản là: **`12345678`**):
+Hệ thống được nạp sẵn 3 tài khoản mẫu đại diện cho 3 phân hệ nghiệp vụ chính (Mật khẩu dùng thử chung cho tất cả tài khoản là: **`12345678`**):
 
 | Vai trò người dùng | Số điện thoại đăng nhập | Mật khẩu mặc định | Giao diện hiển thị | Nhiệm vụ kiểm thử / Trình diễn nghiệp vụ |
 | :--- | :---: | :---: | :---: | :--- |
@@ -169,8 +183,13 @@ Hệ thống được nạp sẵn 3 tài khoản mẫu đại diện cho 3 phân
 | **Lễ tân tiếp nhận (`STAFF`)** | **`0912345678`** | `12345678` | Huy hiệu xanh: *Nhân viên tiếp nhận* | Xem danh sách lịch hẹn toàn xưởng (F04), duyệt xe (`CONFIRMED`), gán Khoang 1–4 và chỉ định Kỹ thuật viên phụ trách, cập nhật tiến độ `IN_PROGRESS` / `COMPLETED`, tiếp nhận khách vãng lai tại quầy. |
 | **Khách hàng mẫu (`CUSTOMER`)** | **`0988888888`** | `12345678` | Huy hiệu xám: *Khách hàng* | Khách hàng VIP trực tuyến, đặt lịch bảo dưỡng/sửa chữa (F03), theo dõi tiến độ xe theo thời gian thực (F06), chủ động đổi ngày/giờ hoặc hủy lịch hẹn (F05). |
 
+### 🎯 Các tiện ích đăng nhập trên Giao diện Web:
+1. **1-Click Điền nhanh Tài khoản**: Trên Modal Đăng nhập, hệ thống tích hợp sẵn 3 nút bấm tương ứng 3 vai trò (Quản lý, Tiếp nhận, Khách hàng). Chỉ cần bấm 1 click là số điện thoại và mật khẩu `12345678` sẽ tự động được điền vào form!
+2. **Biểu tượng Con Mắt (Ẩn/Hiện mật khẩu)**: Click vào icon con mắt ở góc phải ô mật khẩu để kiểm tra lại ký tự vừa nhập (tự động chuyển đổi giữa kiểu `password` và `text` mượt mà).
+3. **Tự khởi tạo & Đồng bộ tự động**: Backend Spring Boot (`InitialData.java`) được cấu hình tự động kiểm tra và khởi tạo/cập nhật mật khẩu chuẩn `12345678` cho cả 3 tài khoản mẫu ngay khi máy chủ khởi động (áp dụng đồng nhất trên cả CSDL In-Memory Dev và Cloud PostgreSQL Neon/Render).
+
 > [!TIP]
-> Khách hàng mới có thể tự bấm **Đăng nhập / Đăng ký** trên giao diện web để tạo tài khoản riêng bằng số điện thoại bất kỳ (hệ thống tự động hỗ trợ băm mật khẩu bảo mật BCrypt).
+> Khách hàng mới cũng có thể tự bấm **Tạo tài khoản khách hàng** ngay trên giao diện web để đăng ký bằng số điện thoại cá nhân bất kỳ (hệ thống tự động hỗ trợ mã hóa băm mật khẩu chuẩn an toàn BCrypt).
 
 ---
 

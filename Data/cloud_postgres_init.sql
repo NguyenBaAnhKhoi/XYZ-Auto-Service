@@ -165,12 +165,11 @@ VALUES (1, 3)
 ON CONFLICT (id) DO UPDATE SET capacity = EXCLUDED.capacity;
 
 -- 2. Tài khoản mẫu mặc định (Mật khẩu: 12345678 - BCrypt hash)
-INSERT INTO workshop_accounts (id, phone, name, password_hash, role, meta) VALUES
-(1, '0901234567', 'Nguyễn Quản Lý', '$2a$10$VbhdpL6NcK/4qDC5UBm3NOHtYwwW7AGKswRGQ28Bm3KDgc/dgK1Mi', 'MANAGER', 'Quản lý trung tâm XYZ'),
-(2, '0912345678', 'Trần Tiếp Nhận', '$2a$10$VbhdpL6NcK/4qDC5UBm3NOHtYwwW7AGKswRGQ28Bm3KDgc/dgK1Mi', 'STAFF', 'Nhân viên tiếp nhận xưởng'),
-(3, '0988888888', 'Lê Khách Hàng', '$2a$10$VbhdpL6NcK/4qDC5UBm3NOHtYwwW7AGKswRGQ28Bm3KDgc/dgK1Mi', 'CUSTOMER', 'Khách hàng VIP')
-ON CONFLICT (id) DO UPDATE SET
-    phone = EXCLUDED.phone,
+INSERT INTO workshop_accounts (phone, name, password_hash, role, meta) VALUES
+('0901234567', 'Nguyễn Quản Lý', '$2a$10$VbhdpL6NcK/4qDC5UBm3NOHtYwwW7AGKswRGQ28Bm3KDgc/dgK1Mi', 'MANAGER', 'Quản lý trung tâm XYZ'),
+('0912345678', 'Trần Tiếp Nhận', '$2a$10$VbhdpL6NcK/4qDC5UBm3NOHtYwwW7AGKswRGQ28Bm3KDgc/dgK1Mi', 'STAFF', 'Nhân viên tiếp nhận xưởng'),
+('0988888888', 'Lê Khách Hàng', '$2a$10$VbhdpL6NcK/4qDC5UBm3NOHtYwwW7AGKswRGQ28Bm3KDgc/dgK1Mi', 'CUSTOMER', 'Khách hàng VIP')
+ON CONFLICT (phone) DO UPDATE SET
     name = EXCLUDED.name,
     password_hash = EXCLUDED.password_hash,
     role = EXCLUDED.role,

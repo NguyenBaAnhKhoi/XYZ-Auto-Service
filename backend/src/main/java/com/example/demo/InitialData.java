@@ -13,7 +13,7 @@ public class InitialData {
             AccountRepository accounts, PasswordEncoder passwords,
             @Value("${APP_BOOTSTRAP_ADMIN_PHONE:}") String adminPhone,
             @Value("${APP_BOOTSTRAP_ADMIN_PASSWORD:}") String adminPassword,
-            @Value("${app.seed-demo-accounts:false}") boolean seedDemoAccounts) {
+            @Value("${app.seed-demo-accounts:true}") boolean seedDemoAccounts) {
         return args -> {
             if (!settings.existsById(1L)) settings.save(new WorkshopDomain.Settings());
             if (services.count() == 0) {
@@ -55,9 +55,17 @@ public class InitialData {
 
     private static void ensureAccount(AccountRepository accounts, PasswordEncoder passwords,
             String phone, String name, WorkshopDomain.Role role, String meta, String defaultPassword) {
-        if (accounts.findByPhone(phone).isEmpty()) {
+        var existing = accounts.findByPhone(phone);
+        if (existing.isEmpty()) {
             var account = new WorkshopDomain.Account();
             account.phone = phone;
+            account.name = name;
+            account.role = role;
+            account.meta = meta;
+            account.passwordHash = passwords.encode(defaultPassword);
+            accounts.save(account);
+        } else {
+            var account = existing.get();
             account.name = name;
             account.role = role;
             account.meta = meta;
