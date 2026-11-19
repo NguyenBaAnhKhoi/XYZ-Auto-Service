@@ -39,7 +39,9 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         List<String> originPatterns = new ArrayList<>(List.of(
+            "http://localhost",
             "http://localhost:[*]",
+            "http://127.0.0.1",
             "http://127.0.0.1:[*]",
             "https://*.netlify.app",
             "https://*.onrender.com",

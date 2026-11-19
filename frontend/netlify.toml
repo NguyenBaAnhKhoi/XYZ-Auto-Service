@@ -2,7 +2,7 @@
 # Handles static asset hosting, API proxy rewrites, and security headers.
 
 [build]
-  publish = "frontend"
+  publish = "."
   command = "node ./build-redirects.js || true"
 
 # Proxy /api/* requests to backend server.

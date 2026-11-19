@@ -869,7 +869,16 @@
         <div id="walkinServiceList" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto p-1"></div>
       </div>
 
-      <div class="grid grid-cols-2 gap-2 text-xs"><label>Khoang tiếp nhận<select id="walkinBay" class="w-full mt-1 px-2 py-2 rounded-lg input-field"></select></label><label>Kỹ thuật viên<select id="walkinTech" class="w-full mt-1 px-2 py-2 rounded-lg input-field"></select></label></div>
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div>
+          <label for="walkinBay" class="block text-[var(--text-muted)] mb-1">Khoang tiếp nhận</label>
+          <select id="walkinBay" class="w-full px-2 py-2 rounded-lg input-field"></select>
+        </div>
+        <div>
+          <label for="walkinTech" class="block text-[var(--text-muted)] mb-1">Kỹ thuật viên</label>
+          <select id="walkinTech" class="w-full px-2 py-2 rounded-lg input-field"></select>
+        </div>
+      </div>
       <div class="flex justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
         <button onclick="closeModal('modalWalkIn')" class="px-3.5 py-1.5 rounded-lg card-elevated text-xs font-semibold">Hủy</button>
         <button onclick="submitWalkInBooking()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold hover:bg-signal-hover transition">
@@ -940,29 +949,40 @@
         <button type="button" aria-label="Đóng" onclick="closeModal('modalLogin')" class="w-7 h-7 rounded-lg card-elevated">×</button>
       </div>
       <div id="loginFields" class="space-y-3 text-xs">
-        <label class="block">Số điện thoại<input type="tel" id="loginPhoneInput" autocomplete="username" class="w-full mt-1 px-3 py-2 rounded-lg input-field font-mono" /></label>
-        <label class="block">Mật khẩu
-          <div class="password-wrapper mt-1">
+        <div>
+          <label for="loginPhoneInput" class="block text-[var(--text-muted)] mb-1">Số điện thoại</label>
+          <input type="tel" id="loginPhoneInput" autocomplete="username" class="w-full px-3 py-2 rounded-lg input-field font-mono" />
+        </div>
+        <div>
+          <label for="loginPasswordInput" class="block text-[var(--text-muted)] mb-1">Mật khẩu</label>
+          <div class="password-wrapper">
             <input type="password" id="loginPasswordInput" autocomplete="current-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
             <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', 'loginPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
               <i id="loginPasswordToggleIcon" class="fa-solid fa-eye"></i>
             </button>
           </div>
-        </label>
+        </div>
         <button type="button" onclick="handlePhoneLogin()" class="w-full py-2.5 rounded-lg bg-signal text-white font-semibold">Đăng nhập</button>
         <button type="button" onclick="toggleRegistration(true)" class="w-full py-2 card-elevated rounded-lg">Tạo tài khoản khách hàng</button>
       </div>
       <div id="registrationFields" class="hidden space-y-3 text-xs">
-        <label class="block">Họ và tên<input id="registerName" autocomplete="name" class="w-full mt-1 px-3 py-2 rounded-lg input-field" /></label>
-        <label class="block">Số điện thoại<input type="tel" id="registerPhone" autocomplete="tel" class="w-full mt-1 px-3 py-2 rounded-lg input-field" /></label>
-        <label class="block">Mật khẩu (ít nhất 8 ký tự)
-          <div class="password-wrapper mt-1">
+        <div>
+          <label for="registerName" class="block text-[var(--text-muted)] mb-1">Họ và tên</label>
+          <input id="registerName" autocomplete="name" class="w-full px-3 py-2 rounded-lg input-field" />
+        </div>
+        <div>
+          <label for="registerPhone" class="block text-[var(--text-muted)] mb-1">Số điện thoại</label>
+          <input type="tel" id="registerPhone" autocomplete="tel" class="w-full px-3 py-2 rounded-lg input-field" />
+        </div>
+        <div>
+          <label for="registerPassword" class="block text-[var(--text-muted)] mb-1">Mật khẩu (ít nhất 8 ký tự)</label>
+          <div class="password-wrapper">
             <input type="password" id="registerPassword" autocomplete="new-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
             <button type="button" onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
               <i id="registerPasswordToggleIcon" class="fa-solid fa-eye"></i>
             </button>
           </div>
-        </label>
+        </div>
         <button type="button" onclick="registerCustomer()" class="w-full py-2.5 rounded-lg bg-signal text-white font-semibold">Đăng ký</button>
         <button type="button" onclick="toggleRegistration(false)" class="w-full py-2 card-elevated rounded-lg">Quay lại đăng nhập</button>
       </div>
@@ -1000,14 +1020,15 @@
           <input type="text" id="newUserMeta" class="w-full px-3 py-2 rounded-lg input-field font-mono" placeholder="30H-998.12 • Hyundai SantaFe" />
         </div>
       </div>
-      <label class="block text-xs">Mật khẩu ban đầu (ít nhất 8 ký tự)
-        <div class="password-wrapper mt-1">
+      <div>
+        <label for="newUserPassword" class="block text-[var(--text-muted)] mb-1 text-xs">Mật khẩu ban đầu (ít nhất 8 ký tự) *</label>
+        <div class="password-wrapper">
           <input type="password" id="newUserPassword" autocomplete="new-password" class="w-full px-3 py-2 pr-10 rounded-lg input-field" />
           <button type="button" onclick="togglePasswordVisibility('newUserPassword', 'newUserPasswordToggleIcon')" class="password-toggle-btn" aria-label="Hiện/ẩn mật khẩu">
             <i id="newUserPasswordToggleIcon" class="fa-solid fa-eye"></i>
           </button>
         </div>
-      </label>
+      </div>
       <div class="flex justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
         <button onclick="closeModal('modalAddUser')" class="px-3.5 py-1.5 rounded-lg card-elevated text-xs font-semibold">Hủy</button>
         <button onclick="saveNewAccount()" class="px-4 py-1.5 rounded-lg bg-signal text-white text-xs font-semibold">Tạo tài khoản</button>

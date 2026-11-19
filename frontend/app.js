@@ -125,20 +125,77 @@ async function perform(action) {
   finally { mutationInProgress = false; }
 }
 
+function showConnectionBanner(attempt, maxAttempts) {
+  let banner = document.getElementById('coldStartBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'coldStartBanner';
+    banner.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-2.5 rounded-xl bg-signal text-white shadow-2xl backdrop-blur-md text-xs font-semibold animate-pulse transition-all duration-300';
+    document.body.appendChild(banner);
+  }
+  const attemptText = attempt > 1 ? ` (Thử lại lần ${attempt}/${maxAttempts})` : '';
+  banner.innerHTML = `
+    <i class="fa-solid fa-spinner fa-spin text-sm"></i>
+    <span>Đang kết nối đến máy chủ (Render Free Tier khởi động lần đầu mất 30-45 giây)...${attemptText}</span>
+  `;
+  banner.style.display = 'flex';
+  banner.style.opacity = '1';
+}
+
+function hideConnectionBanner() {
+  const banner = document.getElementById('coldStartBanner');
+  if (banner) {
+    banner.style.opacity = '0';
+    banner.style.transform = 'translate(-50%, -10px)';
+    setTimeout(() => { banner.remove(); }, 300);
+  }
+}
+
 async function initializeApp() {
-  try {
-    await refreshCsrf();
-    await refreshState();
-    const account = appState.accounts.find(a => a.id === appState.activeAccountId);
-    if (appState.authenticated && appState.currentRole === 'CUSTOMER') {
-      document.getElementById('bookCustomerName').value = account.name;
-      document.getElementById('bookCustomerPhone').value = account.phone;
+  const maxAttempts = 8;
+  const retryDelayMs = 5000;
+  let connected = false;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      if (attempt > 1) {
+        showConnectionBanner(attempt, maxAttempts);
+      }
+      await refreshCsrf();
+      await refreshState();
+      connected = true;
+      hideConnectionBanner();
+      break;
+    } catch (error) {
+      console.warn(`[Auto-Reconnect] Attempt ${attempt}/${maxAttempts} failed:`, error.message);
+      if (attempt < maxAttempts) {
+        showConnectionBanner(attempt, maxAttempts);
+        await new Promise(resolve => setTimeout(resolve, retryDelayMs));
+      } else {
+        hideConnectionBanner();
+        showToast('Không thể kết nối đến máy chủ sau nhiều lần thử. Vui lòng tải lại trang.', 'error');
+        return;
+      }
     }
-    document.getElementById('bookDateInput').min = getFormattedDateOffset(0);
+  }
+
+  if (!connected) return;
+
+  try {
+    const account = Array.isArray(appState.accounts) ? appState.accounts.find(a => a.id === appState.activeAccountId) : null;
+    if (appState.authenticated && appState.currentRole === 'CUSTOMER' && account) {
+      document.getElementById('bookCustomerName').value = account.name || '';
+      document.getElementById('bookCustomerPhone').value = account.phone || '';
+    }
+    const bookDate = document.getElementById('bookDateInput');
+    if (bookDate) bookDate.min = getFormattedDateOffset(0);
+
     window.setInterval(() => {
       if (!document.hidden && !mutationInProgress) refreshState().catch(() => {});
     }, 30000);
-  } catch (error) { showToast(error.message || 'Không thể tải dữ liệu', 'error'); }
+  } catch (err) {
+    console.error('Error populating initial views:', err);
+  }
 }
 
 const originalHeader = renderHeaderAndNav;
